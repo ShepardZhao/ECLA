@@ -1,0 +1,27 @@
+name			Josephine Esmerelda Bloggs
+birthday		13-05-1980
+phone			99887766
+address			27 New Street
+			Birmingham
+			NSW
+email			j.e.bloggs@fanfare.com.au
+booklist		War and Peace, 02-02-1993, 9780758327956
+			23-11-2012, 9783596501847, Catch-22
+
+
+name			Anthony Giles
+birthday		27-03-1992
+email			a.giles89@gamebots.com
+address			27 New Street
+			Birmingham
+			NSW
+phone			000333998877
+
+
+name			sfesfsy fesfesf
+birthday		27-03-1992
+email			a.giddsfefe9@gamebots.com
+address			37 New Street
+			dddsfesf
+			NSW
+phone			5465465464
