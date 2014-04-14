@@ -18,7 +18,7 @@ public class AnalysisController extends RulesController {
 	 * Attributes
 	 */
 	File borrowfile,instructionfile;//file name
-	LinkedHashMap<Integer,LinkedList<HashMap<String,List<String>>>> sectionMap = new LinkedHashMap<Integer,LinkedList<HashMap<String,List<String>>>>(); 
+	LinkedHashMap<Integer,HashMap<String,List<String>>> sectionMap = new LinkedHashMap<Integer,HashMap<String,List<String>>>(); 
 	
 	List<String> borrowfilelist = new ArrayList<String>();
 
@@ -39,6 +39,8 @@ public class AnalysisController extends RulesController {
 		this.ReadBorrowfileToList();
 		//analysis borrowfilelist
 		this.Analysisborrowfilelist();
+		
+		
 		exit(0);
 	}
 	
@@ -65,9 +67,11 @@ public class AnalysisController extends RulesController {
 	 
 	 //analysis borrowfile List
 	 private void Analysisborrowfilelist(){
+		 int count=0;
 		 for(int index=0;index<this.borrowfilelist.size();index++){
 			 String content = this.borrowfilelist.get(index);
 			 	if(content.contains("name")){
+			 		count++;
 			 		linklist.add(this.SingleLineProcess(index, "name"));
 			 	}
 			 	else if(content.contains("birthday")){
@@ -88,10 +92,23 @@ public class AnalysisController extends RulesController {
 			 		linklist.add(this.MultipleLineProcess(index,"booklist"));
 			 		index+=this.MultipleLineProcess(index,"booklist").size()-1;
 			 	}
+			
+		
 		 }
+		 
+		 
+		 //this.SetupSection();
 		  
 	 }
 	 
+	 
+	 
+	 //Set up section 
+	 private void SetupSection(){
+		for( int i=0; i<linklist.size(); i++ ) {
+			sectionMap.put(i,linklist.get(i));
+		}
+	 }
 	 
 	 
 	 
