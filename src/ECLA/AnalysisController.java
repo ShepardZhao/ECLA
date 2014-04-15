@@ -2,124 +2,213 @@
  * 
  */
 package ECLA;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.*;
 
-import static java.lang.System.*;
 /**
- * @This class is doing the file analysis
- * @author:xzh4611
- * @version:v1.0
- * @date:12/04/2014
+ * This is the System controller, that will do something logical algorithms
+ * 
+ * @author xzha4611
+ *
  */
-public class AnalysisController extends RulesController {
-	/**
-	 * Attributes
-	 */
-	File borrowfile,instructionfile;//file name
-	LinkedHashMap<Integer,HashMap<String,List<String>>> sectionMap = new LinkedHashMap<Integer,HashMap<String,List<String>>>(); 
+public class AnalysisController {
+	private final String number_punct_Pattern = "[\\p{Digit}|\\p{Punct}]";
+	private final String birthday_Pattern = "^\\d{2}-\\d{2}-\\d{4}$";
+	private final String email_Pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private final String phone_Pattern = "[\\d+]";
+	private File filename;
 	
-	List<String> borrowfilelist = new ArrayList<String>();
-
-	LinkedList<HashMap<String,List<String>>> linklist = new LinkedList<HashMap<String,List<String>>>();
+	
 	/**
-	 * Methods
+	 * Set Initial file path
 	 */
-	//Get borrowfile and instructionfile from class ECL
-	public void SetInitial(String borrowfile, String instructionfile){
-		this.borrowfile = new File(borrowfile);
-		this.instructionfile = new File(instructionfile);
+	protected void SetInitial(String filename){
+		this.filename = new File(filename);
+	}
+	/**
+	 * end
+	 */
+	
+	
+	/**
+	 * Get file 
+	 */
+	protected File GetFileWithName(){
+		return this.filename;
 	}
 	
+	/**
+	 * end
+	 */
 	
-	//Analysis interface
-	public void AnalysisInterface(){
-		//reads content from borrowfile 
-		this.ReadBorrowfileToList();
-		//analysis borrowfilelist
-		this.Analysisborrowfilelist();
-		
-		
-		exit(0);
+	
+	
+	
+	
+	/**
+	 * pattern check
+	 */
+	
+	private boolean PatternCheck(String patternString, String namevalue){
+	    Pattern pattern = Pattern.compile(patternString);
+	    Matcher m = pattern.matcher(namevalue);
+	    boolean find = false;
+	    while(m.find()){
+	    	find = true;
+	    }
+	    
+	    if(find==true){
+	    	return true;
+	    }
+	    else{
+	    return false;
+	    }
 	}
 	
+	/**
+	 * end
+	 */
+	
 
-	// read borrowfile to list
-	 private void ReadBorrowfileToList(){ 
-		 Scanner scanner;	
-		 try { 
-			 scanner = new Scanner(this.borrowfile);	
-			  
-			 while(scanner.hasNextLine()){
-				 borrowfilelist.add(scanner.nextLine()); 
-			 }
+	/**
+	 * Name field check
+	 */
+	//Name field checked only
+	protected boolean NameFieldCheck(String namevalue){
 		
-			 scanner.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				exit(0);
-			}
-			
-	 }
-	 
-	 
-	 //analysis borrowfile List
-	 private void Analysisborrowfilelist(){
-		 int count=0;
-		 for(int index=0;index<this.borrowfilelist.size();index++){
-			 String content = this.borrowfilelist.get(index);
-			 	if(content.contains("name")){
-			 		count++;
-			 		linklist.add(this.SingleLineProcess(index, "name"));
-			 	}
-			 	else if(content.contains("birthday")){
-			 		linklist.add(this.SingleLineProcess(index, "birthday"));
-			 	}
-			 	else if(content.contains("phone")){
-			 		linklist.add(this.SingleLineProcess(index, "phone"));
-			 	}
-			 	else if(content.contains("email")){
-			 		linklist.add(this.SingleLineProcess(index, "email"));
-			 	}
-			 	else if(content.contains("address")){
-				 //out.println(this.borrowfilelist.get(index));
-			 		linklist.add(this.MultipleLineProcess(index,"address"));
-			 		index+=this.MultipleLineProcess(index,"address").size()-1;
-				}
-			 	else if(content.contains("booklist")){
-			 		linklist.add(this.MultipleLineProcess(index,"booklist"));
-			 		index+=this.MultipleLineProcess(index,"booklist").size()-1;
-			 	}
-			
-		
-		 }
-		 
-		 
-		 //this.SetupSection();
-		  
-	 }
-	 
-	 
-	 
-	 //Set up section 
-	 private void SetupSection(){
-		for( int i=0; i<linklist.size(); i++ ) {
-			sectionMap.put(i,linklist.get(i));
+		if(namevalue.isEmpty() || this.PatternCheck(this.number_punct_Pattern,namevalue)){
+			return true;
 		}
+		else{
+			return false;
+		}
+			
+	}
+	 	
+	
+	/**
+	 * end
+	 */
+	
+	
+	/**
+	 * Birthday field check 
+	 */
+	protected boolean BirthdayFieldCheck(String birthdayString){
+		
+		if(birthdayString.isEmpty() || !this.PatternCheck(this.birthday_Pattern,birthdayString)){
+			return true;
+		}
+		else{
+			return false;
+		}	
+	}
+	
+	/**
+	 * end
+	 */
+	
+	
+	/**
+	 * Email field check
+	 */
+	protected boolean MailFieldCheck(String MailString){
+		if(MailString.isEmpty() || !this.PatternCheck(this.email_Pattern, MailString)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	/**
+	 * end
+	 */
+	
+	
+	/**
+	 * Phone field check
+	 */
+	protected boolean PhoneFieldCheck(String PhoneInteger){
+		if(PhoneInteger.isEmpty() || !this.PatternCheck(this.phone_Pattern, PhoneInteger)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * Multiple line condition check
+	 */
+	protected boolean MultipleLineConditionCheck(String getstring){
+		String[] keywords ={"name","address","birthday","email","phone","booklist"};
+		boolean condition = false;
+		for(String index : keywords){
+			if(getstring.contains(index)){
+				condition = true;
+			}
+		}
+		return condition;
+		
+		
+	}
+	
+	
+	/**
+	 * end
+	 */
+	
+	
+	
+	 /**
+	  * filter /t
+	  * @param string
+	  * @return
+	  */
+	 protected String FilterTab(String string){
+		        String dest = "";
+		        if (string!=null) {
+		            Pattern p = Pattern.compile("\t");
+		            Matcher m = p.matcher(string);
+		            dest = m.replaceAll("");
+		        }
+		        return dest;
+		    }
+	 
+	 /**
+	  * end
+	  */
+	 
+	
+	 /**
+	  * Line processes
+	  */
+	 //multiple line check
+	 protected boolean MultipleAddressLineCheck(String string){
+		 String getstring =this.FilterTab(string);
+		 
+		 Pattern p = Pattern.compile("^[A-Za-z]+$");
+		 Matcher m = p.matcher(getstring);
+		 boolean condition =false;
+		 while(m.find()){
+			 condition = true;
+		 }
+		 return condition;
+		 
 	 }
 	 
 	 
 	 
 	 
 	 //Single line process
-	 private LinkedHashMap<String,List<String>> SingleLineProcess(int index,String string){
+	 protected List<String> SingleLineProcess(String keyname,String string){
 		 List<String> list = new ArrayList<String>();
-		 LinkedHashMap<String,List<String>> fieldMap = new  LinkedHashMap<String,List<String>>();
 
-		 Scanner singleLine = new Scanner (this.borrowfilelist.get(index));
-		 singleLine.useDelimiter(string+"\t*");
+		 Scanner singleLine = new Scanner (string);
+		 singleLine.useDelimiter(keyname);
 		 while(singleLine.hasNext()){
 			 String getstring = singleLine.next();
 			 if(!getstring.equals(string)){
@@ -127,62 +216,43 @@ public class AnalysisController extends RulesController {
 			 }
 		 }
 		 singleLine.close();
-		 
-		 fieldMap.put(string, list);
-		 
-		 return fieldMap;
-		 
-		 
-	 }
-	 private LinkedHashMap<String,List<String>> MultipleLineProcess(int index,String string){
-		 	List<String> list = new ArrayList<String>();
-			LinkedHashMap<String,List<String>> fieldMap = new  LinkedHashMap<String,List<String>>();
 
-		 	if(this.borrowfilelist.get(index).contains(string)){
-		 		Scanner scanner = new Scanner(this.borrowfilelist.get(index));
-		 		scanner.useDelimiter(string+"\t*");
+		 return list;
+
+
+	 }
+	 
+	 
+	 //MultiList process
+	 protected List<String> MultipleLineProcess(String type, String string,List<String> multiline){
+	 		Scanner scanner = new Scanner(string);
+
+		 	if(string.contains(type)){
+		 		scanner.useDelimiter(type);
 		 		while(scanner.hasNext()){
 		 			String getstring = scanner.next();
 		 			if(!getstring.equals(string)){
-		 				list.add(getstring);
+		 				multiline.add(getstring);
 		 			}
 		 		}
 	 			scanner.close();
-		 	}
-		
-		 for(int tempindex=index;tempindex<this.ReturnSizeOfMultopleLine(index);tempindex++){
-			 if(!this.MultipleLineConditionCheck(this.borrowfilelist.get(tempindex))){
-				 list.add(this.FilterTab(this.borrowfilelist.get(tempindex)));
-			 }
-		
-		 }
-		 
-		 fieldMap.put(string, list);
+		 	}else{
+ 				multiline.add(string);
 
-		 
-		 return fieldMap;
-		 
+		 	}
+		 return multiline;
+
 	 }
+	 /**
+	  * end
+	  */
+	 
+
+	 
+	 
 	 
 	 
 	 
 	
-	 
-	 
-	 //return available length of multiple line
-	 private int ReturnSizeOfMultopleLine(int index){
-		 int tempindex;
-		 for(tempindex=index+1;tempindex<this.borrowfilelist.size();tempindex++){
-			 if(this.MultipleLineConditionCheck(this.borrowfilelist.get(tempindex)) || this.borrowfilelist.get(tempindex).equals("")){
-				break; 
-			 }
-		 }
-		 return tempindex;
-	 }
-	 
-	
-	 
-	 
-	 
 	
 }

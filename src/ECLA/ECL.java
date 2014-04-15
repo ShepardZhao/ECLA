@@ -17,28 +17,36 @@ public class ECL {
 
 	//attributes 
 	private String borrowfile,instructionfile,outputfile,reportfile;
-	private AnalysisController anaysisController;
-	private ECLG eclGenerator;
+	private AnalysisECLB anaysisBorrow;
+	private AnalysisECLI anaysisInstruction;
+	private ExecutiveECL executiveLogical;
 	
 	//constructor
-	ECL(String borrowfile, String instructionfile, String outputfile, String reportfile,AnalysisController anaysisController,ECLG eclGenerator){
+	ECL(String borrowfile, String instructionfile, String outputfile, String reportfile){
 		this.borrowfile = borrowfile;
 		this.instructionfile = instructionfile;
 		this.outputfile = outputfile;
 		this.reportfile = reportfile;
-		this.anaysisController = anaysisController;
-		this.eclGenerator = eclGenerator;
+		this.anaysisBorrow = new AnalysisECLB();
+		this.anaysisInstruction = new AnalysisECLI();
+		this.executiveLogical = new ExecutiveECL();
 	}
 	
-	//Get ECLG
-	public ECLG GetEclGenerator(){
-		return this.eclGenerator;
+	//Get AnalysisECLI
+	public AnalysisECLI GetAnalysisInstruction(){
+		return this.anaysisInstruction;
 	}
 	
-	//Get AnaysisController
-	public AnalysisController GetAnaysisController(){
-		return this.anaysisController;
+	//Get AnalysisECLB
+	public AnalysisECLB GetAnalysisBorrow(){
+		return this.anaysisBorrow;
 	}
+	
+	//Get ExecutiveECL
+	public ExecutiveECL GetExecutiveECL(){
+		return this.executiveLogical;
+	}
+	
 	//Get borrow file
 	public String GetBorrowfile(){return this.borrowfile;}
 	
@@ -73,11 +81,14 @@ public class ECL {
 			// args[1] -> instructionfile
 			// args[2] -> outputfile
 			// args[3] -> reportfile
-			ECL ECLSystem = new ECL(args[0],args[1],args[2],args[3],new AnalysisController(),new ECLG());
+			ECL ECLSystem = new ECL(args[0],args[1],args[2],args[3]);
 			//pass the borrowfile to class AnalysisController 	
-			ECLSystem.anaysisController.SetInitial(args[0], args[1]);
+			ECLSystem.GetAnalysisBorrow().SetInitial(ECLSystem.GetBorrowfile());
 			//File analysis interface
-			ECLSystem.anaysisController.AnalysisInterface();
+			ECLSystem.GetAnalysisBorrow().ReadBorrowfile();
+			
+			
+			
 			
 			
 			
