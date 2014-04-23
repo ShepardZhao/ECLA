@@ -74,7 +74,13 @@ public class ECL {
 	
 	//main function
 	public static void main(String[] args) {
+	/**
+	 * Program interface
+	 */
 		
+		/**
+		 * Condition check
+		 */
 		if(ArgsCheck(args)){
 			// Object that reads the arguments from command line
 			// args[0] -> borrowfile 
@@ -82,15 +88,37 @@ public class ECL {
 			// args[2] -> outputfile
 			// args[3] -> reportfile
 			ECL ECLSystem = new ECL(args[0],args[1],args[2],args[3]);
-			//pass the borrowfile to class AnalysisController 	
+			
+			/**
+			 * Pass file to analysis
+			 */
+			//Pass the borrowfile to class AnalysisECLB 	
 			ECLSystem.GetAnalysisBorrow().SetInitial(ECLSystem.GetBorrowfile());
-			//File analysis interface
+			
+			//borrow analysis interface
 			ECLSystem.GetAnalysisBorrow().ReadBorrowfile();
 			
+			//Pass the instruction file to class 
+			ECLSystem.GetAnalysisInstruction().SetInitial(ECLSystem.GetInstructionfile());
+			
+			//instruction analysis interface
+			
+			ECLSystem.GetAnalysisInstruction().ReadInstructionFile();
+			
+			/**
+			 * end
+			 */
 			
 			
+			/**
+			 * Fetching the BorrowHashMap and InstructionHashMap are to process.
+			 */
+			ECLSystem.GetExecutiveECL().SetExecutiveInital(ECLSystem.GetAnalysisBorrow().GetsectionMap(), ECLSystem.GetAnalysisInstruction().GetInstructionlist());
+			ECLSystem.GetExecutiveECL().Executing();	
 			
-			
+			/**
+			 * end
+			 */
 			
 			
 		}else{
@@ -98,7 +126,14 @@ public class ECL {
 			exit(0);
 		}
 		
+		/**
+		 * end
+		 */
 		
+		
+	/**
+	 * end
+	 */
 	}
 
 }

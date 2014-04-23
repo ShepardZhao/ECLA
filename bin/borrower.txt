@@ -1,10 +1,10 @@
 name			Anthony Giles
-birthday		1-03-1992
+birthday		21-03-1992
 email			a.giles89@gamebots.com
 address			27 New Street
 			Birmingham
 			NSW
-phone			000333998877
+phone			0003204998877
 
 name			Josephie Esmerelda Bloggs
 birthday		13-05-1980

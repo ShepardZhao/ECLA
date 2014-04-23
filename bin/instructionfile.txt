@@ -1,1 +1,10 @@
 sort name
+add birthday 12-12-1983; email notbilbo@fiction.com; name Frank Took; address s3f3s few NSW; booklist zombie world, 16-02-2000, 1780751327356
+add email notbilbo@fiction.com; name Frank Took
+add email fesfesfes@fiction.com; name sdf fefe; birthday 11-12-2034
+delete birthday 27-03-1992; name sfesfsy fesfesf
+query birthday 10-11-1982; booklist 9780758327956
+query name Frank Took; birthday 12-12-1983; 27-03-2013; 26-01-2012
+save
+sort birthday
+

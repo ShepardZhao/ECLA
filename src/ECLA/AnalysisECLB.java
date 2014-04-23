@@ -25,7 +25,7 @@ public class AnalysisECLB extends AnalysisController {
 	 * Methods
 	 */
 
-	
+
 	/**
 	 * Read BorrowFile section
 	 */
@@ -74,7 +74,7 @@ public class AnalysisECLB extends AnalysisController {
 					//if current line contained phone field && name and birthday fields have corrected format
 					else if(content.contains("phone") && namecondition  && birthdaycondition){
 						if(!this.SingleLineConditionCheck("phone", content)){
-							linkedHashMap.put("phone",this.SingleLineProcess("phone",content));
+							linkedHashMap.put("phone",this.PhoneSingleLineProcess("phone",content));
 						}
 					}
 					//if current line contained email field && name and birthday fields have corrected format
@@ -173,6 +173,7 @@ public class AnalysisECLB extends AnalysisController {
 		 
 		 return condition;
 	 }
+
  
 	 /**
 	  * end

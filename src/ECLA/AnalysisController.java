@@ -18,6 +18,7 @@ public class AnalysisController {
 	private final String birthday_Pattern = "^\\d{2}-\\d{2}-\\d{4}$";
 	private final String email_Pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private final String phone_Pattern = "[\\d+]";
+	private final String isbn_Pattern = "^[0-9]{13}$";
 	private File filename;
 	
 	
@@ -139,6 +140,34 @@ public class AnalysisController {
 		}
 	}
 	
+	/**
+	 * book list single field process
+	 */
+	
+	protected boolean BooklistISBNCheck(String getisbn){
+		if(this.PatternCheck(this.isbn_Pattern, getisbn)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	protected boolean BooklistDate(String getstring){
+		//in this case the birthday date has same format just like the borrowed date
+		if(this.PatternCheck(this.birthday_Pattern, getstring)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * end
+	 */
+	
 	
 	/**
 	 * Multiple line condition check
@@ -202,11 +231,43 @@ public class AnalysisController {
 	 
 	 
 	 
+	 //phone process
+	protected List<String> PhoneSingleLineProcess(String keyname, String string){
+		 List<String> list = new ArrayList<String>();
+		 Scanner singleLine = new Scanner (string);
+		 singleLine.useDelimiter(keyname);
+		 while(singleLine.hasNext()){
+			 String getstring = singleLine.next();
+			 if(!getstring.equals(string)){
+				 
+				 list.add(this.phoneString(getstring));
+			 }
+		 }
+		 singleLine.close();
+
+	
+		 
+		 return list;
+	 }
+	 
+	//return the phone string that contains space
+	private String phoneString(String phonestring){
+		
+		int length = phonestring.replaceAll("[^\t+]", "").length();
+		String string = this.FilterTab(phonestring);
+		String non_zero = string.replaceAll("^0*","");
+		for(int i=0;i<length;i++){
+			non_zero="\t"+non_zero;
+		}
+		
+		return non_zero;
+		
+	}
+	 
 	 
 	 //Single line process
 	 protected List<String> SingleLineProcess(String keyname,String string){
 		 List<String> list = new ArrayList<String>();
-
 		 Scanner singleLine = new Scanner (string);
 		 singleLine.useDelimiter(keyname);
 		 while(singleLine.hasNext()){
@@ -217,6 +278,8 @@ public class AnalysisController {
 		 }
 		 singleLine.close();
 
+	
+		 
 		 return list;
 
 
@@ -238,7 +301,6 @@ public class AnalysisController {
 	 			scanner.close();
 		 	}else{
  				multiline.add(string);
-
 		 	}
 		 return multiline;
 

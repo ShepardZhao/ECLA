@@ -1,6 +1,6 @@
 package ECLA;
 
-public class ECLG {
+public class ECLReport {
 
 	
 	
