@@ -19,7 +19,7 @@ public class AnalysisECLB extends AnalysisController {
 	/**
 	 * Attributes
 	 */
-	private LinkedHashMap<Integer,List<LinkedHashMap<String,List<String>>>> borrowsectionMap = new LinkedHashMap<Integer, List<LinkedHashMap<String,List<String>>>>();
+	private List<LinkedHashMap<String,List<String>>> borrowsectionList = new ArrayList<LinkedHashMap<String,List<String>>>();
 	
 	/**
 	 * Methods
@@ -101,11 +101,11 @@ public class AnalysisECLB extends AnalysisController {
 					 if(linkedHashMap.containsKey("name") && linkedHashMap.containsKey("birthday")){
 					 tempList.add(linkedHashMap);
 	
-					 borrowsectionMap.put(count++, tempList);
+					 borrowsectionList.addAll(tempList);
 					 
-					 linkedHashMap = new LinkedHashMap<String,List<String>>();
-
 					 tempList = new ArrayList<LinkedHashMap<String,List<String>>>();
+
+					 linkedHashMap = new LinkedHashMap<String,List<String>>();
 					 
 					 multilineborrowlist = new ArrayList<String>();
 					 
@@ -183,8 +183,8 @@ public class AnalysisECLB extends AnalysisController {
 	 /**
 	  * Return SectionMap
 	  */
-	 public LinkedHashMap<Integer,List<LinkedHashMap<String,List<String>>>>  GetsectionMap(){
-			return this.borrowsectionMap;
+	 public List<LinkedHashMap<String,List<String>>>  GetsectionList(){
+			return this.borrowsectionList;
 		}
 	 /**
 	  * end

@@ -332,7 +332,7 @@ public class AnalysisECLI extends AnalysisController{
 	 * Get Instruction list
 	 */
 	
-	public List<LinkedHashMap<String,LinkedHashMap<String,List<String>>>> GetInstructionlist(){
+	public List<LinkedHashMap<String,LinkedHashMap<String,List<String>>>> GetInstructionList(){
 		return this.Instructionlist;
 	}
 

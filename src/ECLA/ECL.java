@@ -54,10 +54,10 @@ public class ECL {
 	public String GetInstructionfile(){return this.instructionfile;}
 	
 	//Get output file
-	public String outputfile(){return this.outputfile;}
+	public String Getoutputfile(){return this.outputfile;}
 	
 	//Get report file
-	public String reportfile(){return this.reportfile;}
+	public String Getreportfile(){return this.reportfile;}
 	
 	//Arguments detection
 	static boolean ArgsCheck(String[] getargs){
@@ -112,8 +112,10 @@ public class ECL {
 			
 			/**
 			 * Fetching the BorrowHashMap and InstructionHashMap are to process.
+			 * and also passed the output file and report file
 			 */
-			ECLSystem.GetExecutiveECL().SetExecutiveInital(ECLSystem.GetAnalysisBorrow().GetsectionMap(), ECLSystem.GetAnalysisInstruction().GetInstructionlist());
+			
+			ECLSystem.GetExecutiveECL().SetExecutiveInital(ECLSystem.GetAnalysisBorrow().GetsectionList(), ECLSystem.GetAnalysisInstruction().GetInstructionList(),ECLSystem.Getoutputfile(),ECLSystem.Getreportfile());
 			ECLSystem.GetExecutiveECL().Executing();	
 			
 			/**
