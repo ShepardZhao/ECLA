@@ -10,7 +10,7 @@ import java.util.*;
  * @author zhaoxun321
  *
  */
-public class AnalysisECLI extends AnalysisController{
+public class AnalysisECLI extends ECLController{
 	
 	/**
 	 * attributes
@@ -36,8 +36,9 @@ public class AnalysisECLI extends AnalysisController{
 			Scanner scanner = new Scanner(this.GetFileWithName());
 			while(scanner.hasNextLine()){
 				String content = scanner.nextLine();
+			if(!content.isEmpty()){
 				if (content.contains("add") && content.contains("name") && content.contains("birthday")){
-					Instructionlist.add(this.RturnTempLinkedMap("add",content));
+					Instructionlist.add(this.RturnTempLinkedMap("add",content));	
 				}
 				else if(content.contains("delete") && content.contains("name") && content.contains("birthday")){
 					Instructionlist.add(this.RturnTempLinkedMap("delete",content));
@@ -54,8 +55,8 @@ public class AnalysisECLI extends AnalysisController{
 
 				}
 				
-				
 			}
+		}
 			
 			scanner.close();
 			
@@ -163,7 +164,7 @@ public class AnalysisECLI extends AnalysisController{
 		splitdate.useDelimiter("; ");
 		while(splitdate.hasNext()){
 			String getdate = splitdate.next();
-			if(this.BooklistDate(getdate)){
+			if(this.BooklistDateCheck(getdate)){
 				count++;
 			}
 		}	
@@ -229,28 +230,28 @@ public class AnalysisECLI extends AnalysisController{
 		while(ioscanner.hasNext()){
 			String getstring = ioscanner.next();
 			if(getstring.contains("birthday")){//check birthday 
-				if(!this.BirthdayFieldCheck(getstring.replaceAll("^birthday\\s",""))){
-					linkedHashMap.put("birthday", this.SingleLineProcess("birthday\\s", getstring));
+				if(this.BirthdayFieldCheck(getstring.replaceAll("^birthday\\s",""))){
+					linkedHashMap.put("birthday", this.SingleLineProcess("birthday", getstring));
 				}
 			}
 			else if(getstring.contains("name")){//check name
-				if(!this.NameFieldCheck(getstring.replaceAll("^name\\s",""))){
-					linkedHashMap.put("name",this.SingleLineProcess("name\\s", getstring));
+				if(this.NameFieldCheck(getstring.replaceAll("^name\\s",""))){
+					linkedHashMap.put("name",this.SingleLineProcess("name", getstring));
 
 				}	
 			}
 			else if(getstring.contains("email")){//check email
-				if(!this.MailFieldCheck(getstring.replaceAll("^email\\s",""))){
-					linkedHashMap.put("email", this.SingleLineProcess("email\\s", getstring));
+				if(this.MailFieldCheck(getstring.replaceAll("^email\\s",""))){
+					linkedHashMap.put("email", this.SingleLineProcess("email", getstring));
 				}	
 			}
 			else if(getstring.contains("phone")){//check phone
-				if(!this.PhoneFieldCheck(getstring.replaceAll("^phone\\s",""))){
-					linkedHashMap.put("phone", this.SingleLineProcess("phone\\s", getstring));
+				if(this.PhoneFieldCheck(getstring.replaceAll("^phone\\s",""))){
+					linkedHashMap.put("phone", this.SingleLineProcess("phone", getstring));
 				}	
 			}
 			else if(getstring.contains("address")){//check address
-					linkedHashMap.put("address", this.SingleLineProcess("address\\s", getstring));
+					linkedHashMap.put("address", this.SingleLineProcess("address", getstring));
 			}
 			else if(getstring.contains("booklist")){//check booklist
 				linkedHashMap.put("booklist", this.DeepBooklistCheck(getstring));			
@@ -276,14 +277,10 @@ public class AnalysisECLI extends AnalysisController{
 			String getsubcontent = booklistscanner.next();
 			//if current booklist string contains ', '
 			if(getbooklist.contains(", ")){
-			if(!this.DeeperBookListCheck(getsubcontent).isEmpty()){
-				list.add(this.DeeperBookListCheck(getsubcontent));
+				list.addAll(this.DeeperBookListCheck(getsubcontent));
+			
 			}
-			}
-			else{
-				list.add(getsubcontent);
-
-			}
+			
 		}
 		
 		
@@ -293,30 +290,23 @@ public class AnalysisECLI extends AnalysisController{
 	
 	
 	//deeper book list check
-	private String DeeperBookListCheck(String modifiedbooklist){
-		Scanner deepercheck = new Scanner(modifiedbooklist);
+	private List<String> DeeperBookListCheck(String modifiedbooklist){
+		List<String> booklist = new ArrayList<String>();
+		Scanner deepercheck = new Scanner(modifiedbooklist.replaceAll("^\\s+", ""));
 		boolean isbn=false;
 		boolean date=false;
 		deepercheck.useDelimiter(", ");
 		while(deepercheck.hasNext()){				
 			String getcontent = deepercheck.next();
-			if(this.BooklistISBNCheck(getcontent)){
-				isbn=true;
-			}
-			if(this.BooklistDate(getcontent)){
-				date = true;
+			if(this.BookFieldCheck(getcontent)){
+				booklist.add(getcontent);
 			}
 		}
 		
 		
 		deepercheck.close();
 		
-		if(isbn & date){
-			return modifiedbooklist;
-		}
-		else{
-			return null;
-		}
+		return booklist;
 		
 	}
 	
@@ -324,9 +314,38 @@ public class AnalysisECLI extends AnalysisController{
 	 * end
 	 */
 	
-
+	/**
+	 * Instruction Booklistdate and ISBN check
+	 */
+	private boolean BookFieldCheck(String booklistString){
+		boolean isbn = false;
+		boolean bookdate = false;
+		Scanner analysisbooklist = new Scanner(booklistString);
+		while (analysisbooklist.hasNext()){
+			String getstring = analysisbooklist.next();
+			if(this.BooklistISBNCheck(getstring)){
+				isbn = true;
+			}
+			else if(this.BooklistDateCheck(getstring)){
+				bookdate = true;
+			}
+		}
+		
+		analysisbooklist.close();
+		
+		if(isbn && bookdate){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+		
+	}
 	
-	
+	/**
+	 * end
+	 */
 	
 	/**
 	 * Get Instruction list

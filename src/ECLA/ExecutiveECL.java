@@ -8,21 +8,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
-
-import static java.lang.System.*;
-
 /**
  * This class is only containing the executing function 
  * @author zhaoxun321
  *
  */
-public class ExecutiveECL {
+public class ExecutiveECL extends ECLController {
 	/**
 	 * Attributes
 	 */
 	private List<LinkedHashMap<String,List<String>>> borrowlist;
 	private List<LinkedHashMap<String,LinkedHashMap<String,List<String>>>> instructionlist;
-	private List<LinkedHashMap<String,List<String>>> querylist = new ArrayList<LinkedHashMap<String,List<String>>>();
+	private LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>> query = new LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>>();
+	private List<LinkedHashMap<String,List<String>>> tempquery = new ArrayList<LinkedHashMap<String,List<String>>>();
 	private ECLReport eclr; // to generate the report
 	private ECLOutput eclo;
 	private String Outputfile;
@@ -67,13 +65,9 @@ public class ExecutiveECL {
 		}
 		
 		
+		//pass the modified borrowlist to class ECLOutput
+		this.eclo.GenerateOutputFile(this.borrowlist);
 	}
-	
-	/**
-	 * end
-	 * 
-	 */
-	
 	
 	//Loop ArrayList of Instruction
 	private void LoopInstructionList(LinkedHashMap<String,LinkedHashMap<String,List<String>>> item){
@@ -90,14 +84,18 @@ public class ExecutiveECL {
 		    	this.DeleteProcess(value);
 		    }
 		    else if(key.equals("query_formatOne")){
-		    	this.Query_formatOneProcess(value);
+		    	//tempquery.addAll(this.Query_formatOneProcess(value));
+		    	//this.query.put(this.Generatekey(value),tempquery);
+		    	
 		    }
 		    else if(key.equals("query_formatTwo")){
-		    	this.query_formatTwoProcess(value);
+		    	//this.query_formatTwoProcess(value);
 
 		    }
 		    else if(key.equals("save")){
-		    	
+		    	//this.eclr.WriteToReportFile(query);
+		    	tempquery.clear();
+		    	query.clear();
 		    }
 		}
 	}
@@ -106,6 +104,8 @@ public class ExecutiveECL {
 	/**
 	 * end
 	 */
+	
+
 	
 	
 	/**
@@ -163,14 +163,17 @@ public class ExecutiveECL {
 	/**
 	 * query_formatOne processes
 	 */
-	private void Query_formatOneProcess(LinkedHashMap<String, List<String>> getvalue){
+	private List<LinkedHashMap<String,List<String>>> Query_formatOneProcess(LinkedHashMap<String, List<String>> getvalue){
+		List<LinkedHashMap<String,List<String>>> querylist = new ArrayList<LinkedHashMap<String,List<String>>>();
+
 		try{
-		this.querylist.add(this.SaveQueryFormatOne(getvalue));
+			querylist.add(this.SaveQueryFormatOne(getvalue));
 		}
 		catch(Exception e){
 			e.getMessage();
 		}
 	
+	return querylist;
 	}
 	
 	
@@ -186,13 +189,18 @@ public class ExecutiveECL {
 	 * query_formatTwo processes
 	 */
 	
-	private void query_formatTwoProcess(LinkedHashMap<String, List<String>> getvalue){
+	private List<LinkedHashMap<String,List<String>>> query_formatTwoProcess(LinkedHashMap<String, List<String>> getvalue){
+		List<LinkedHashMap<String,List<String>>> querylist = new ArrayList<LinkedHashMap<String,List<String>>>();
+			
 		try{
-			this.querylist.add(this.SaveQueryFormatTwo(getvalue));
+			querylist.add(this.SaveQueryFormatTwo(getvalue));
 			}
 			catch(Exception e){
 				e.getMessage();
 			}
+		
+		
+		return querylist;
 	}
 	
 	
@@ -201,14 +209,6 @@ public class ExecutiveECL {
 	 */
 	
 	
-	/**
-	 * save processes
-	 */
-	
-	
-	/**
-	 * end
-	 */
 	
 	
 	private List<String> ReturnNameAndBirthday(LinkedHashMap<String, List<String>> getvalue){
@@ -226,75 +226,47 @@ public class ExecutiveECL {
 	/******************************************** Algorithm **********************************************/
 	
 		/**
-		 * Sort Algorithm with out Java its API
+		 * Sort Algorithm without Java its API
 		 */
 		
 		private void sort(String sort_type){
-			String[] sort_typeArray = null;
-			List<LinkedHashMap<String,List<String>>> templist = new ArrayList<LinkedHashMap<String,List<String>>>();
-			List<String> sort_typeList = new ArrayList<String>();
-			for(int index=0;index<this.borrowlist.size();index++){
-				for(Entry<String, List<String>> entry : this.borrowlist.get(index).entrySet()){
-					String getkey = entry.getKey();
-					List<String> getvalue = entry.getValue();
-					if(getkey.equals(sort_type)){
-						sort_typeList.add(getvalue.get(0).replaceAll("^\\t+", ""));
-						
-					}
-				}
-			}
-			
-			
-			//convert list to an array
-			//deu to birthday has different format that compared with other fields, so we resorted it in different way
+			//sort existed items
+			List<LinkedHashMap<String,List<String>>> temp = new ArrayList<LinkedHashMap<String,List<String>>>();
 			if(sort_type.equals("birthday")){
-				Collections.sort(sort_typeList, new Comparator<String>() {
-			        DateFormat f = new SimpleDateFormat("dd-MM-yyyy");
-			        @Override
-			        public int compare(String o1, String o2) {
-			            try {
-			                return f.parse(o1).compareTo(f.parse(o2));
-			            } catch (ParseException e) {
-			                throw new IllegalArgumentException(e);
-			            }
-			        }
-			    });
-				//convert arraylist to array
-				sort_typeArray = sort_typeList.toArray(new String[sort_typeList.size()]);
-
-				
+				temp.addAll(this.DateStringSort(sort_type,this.ReturnExeistField(sort_type)));
 			}
 			else{
-				//convert arraylist to array
-				sort_typeArray = sort_typeList.toArray(new String[sort_typeList.size()]);
-				//resort array ->this is only for string or numeric 
-				sort_typeArray = this.StringSort(sort_typeArray);
-
-			}
-
-			
-			for(int i=0;i<sort_typeArray.length;i++){
-				templist.add(this.ReturnSortMatch(sort_typeArray[i]));
-					
+				temp.addAll(this.StringSort(sort_type,this.ReturnExeistField(sort_type)));					
 			}
 			
-			//check section that has not contained the sort field then we will add them all at end of templist
-				templist.addAll(this.ReturnNonField(sort_type));
+			//append none existed item to end of collection
 			
-				
+			
+			temp.addAll(this.ReturnNonField(sort_type));
 			
 			//clear the old collection
 			this.borrowlist.clear();
 			//append the new collection from temlist
-			this.borrowlist.addAll(templist);
+			this.borrowlist.addAll(temp);
 			
 		}
 	
 		//check if current section has not contained key
-		private List<LinkedHashMap<String,List<String>>> ReturnNonField(String value){
+		private List<LinkedHashMap<String,List<String>>> ReturnNonField(String key){
 			List<LinkedHashMap<String,List<String>>> temp = new ArrayList<LinkedHashMap<String,List<String>>>();
 			for(int index=0; index<this.borrowlist.size();index++){
-				if(!this.borrowlist.get(index).containsKey(value)){
+				if(!this.borrowlist.get(index).containsKey(key)){
+					temp.add(this.borrowlist.get(index));
+				}
+			}
+			return temp;
+			
+		}
+		
+		private List<LinkedHashMap<String,List<String>>> ReturnExeistField(String key){
+			List<LinkedHashMap<String,List<String>>> temp = new ArrayList<LinkedHashMap<String,List<String>>>();
+			for(int index=0; index<this.borrowlist.size();index++){
+				if(this.borrowlist.get(index).containsKey(key)){
 					temp.add(this.borrowlist.get(index));
 				}
 			}
@@ -304,39 +276,52 @@ public class ExecutiveECL {
 		
 		
 		
-		private LinkedHashMap<String,List<String>> ReturnSortMatch(String value){
-			int index;
-			boolean found =false;
-			for(index=0;index<this.borrowlist.size()-1;index++){
-				for(Entry<String, List<String>> entry : this.borrowlist.get(index).entrySet()){
-					List<String> getvalue = entry.getValue();
-						if(value.equals(getvalue.get(0).replaceAll("^\\t+", ""))){
-							found =true;
-							break;
-						}	
-				}
-				if(found){
-					break;
-				}
-				
-			}
-		
-			return this.borrowlist.get(index);
-		}
-		
-		
-		private String[] StringSort(String[] Array){
-			if(Array.length>0){
-			 boolean swap = true;
-			    int j = 0;
+		//date sort
+		private List<LinkedHashMap<String,List<String>>> DateStringSort(String sortype, List<LinkedHashMap<String,List<String>>> exeistlist){
+				SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
+	        	LinkedHashMap<String,List<String>>  tmp = new LinkedHashMap<String,List<String>> ();
+
+				boolean swap = true;	
+				int j = 0;
 			    while (swap) {
 			        swap = false;
 			        j++;
-			        for (int i = 0; i < Array.length - j; i++) {
-			            if (Array[i].compareTo(Array[i + 1]) > 0) {
-			                String tmp = Array[i];
-			                Array[i] = Array[i + 1];
-			                Array[i + 1] = tmp;
+			        for (int i = 0; i < this.borrowlist.size() - j; i++) {
+			            try {
+							if (dateformat.parse(exeistlist.get(i).get(sortype).get(0)).compareTo(dateformat.parse(exeistlist.get(i + 1).get(sortype).get(0))) > 0) {
+								tmp = new LinkedHashMap<String,List<String>> ();
+				            	tmp = exeistlist.get(i);
+								exeistlist.set(i, exeistlist.get(i + 1));
+								exeistlist.set(i+1, tmp);
+							    swap = true;
+							}
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        	
+
+			        }
+			    }
+			   		//System.out.println(exeistlist);
+			    return exeistlist;
+		}
+		
+		//normal string sort
+		private List<LinkedHashMap<String,List<String>>>  StringSort(String sorttype, List<LinkedHashMap<String,List<String>>> exeistlist){
+        	LinkedHashMap<String,List<String>>  tmp = new LinkedHashMap<String,List<String>> ();
+
+			boolean swap = true;	
+				int j = 0;
+			    while (swap) {
+			        swap = false;
+			        j++;
+			        for (int i = 0; i < exeistlist.size() - j; i++) {
+			            if (this.ConvertListToString(exeistlist.get(i).get(sorttype)).compareTo(this.ConvertListToString(exeistlist.get(i + 1).get(sorttype))) > 0) {
+			            	tmp = new LinkedHashMap<String,List<String>> ();
+			            	tmp = exeistlist.get(i);
+			            	exeistlist.set(i, exeistlist.get(i + 1));
+			            	exeistlist.set(i+1, tmp);
 			                swap = true;
 			            }
 			        	
@@ -344,8 +329,11 @@ public class ExecutiveECL {
 			        }
 
 			    }
-			}
-			    return Array;
+				
+				return exeistlist;
+			
+			 
+				
 		}
 	
 	
@@ -375,6 +363,8 @@ public class ExecutiveECL {
 		private void DeleteRecordFromBorrowlist(List<String> tempList){
 		
 			int index;
+		
+			
 			for(index=0;index<this.borrowlist.size();index++){
 					if(this.DeeperLoop(this.borrowlist.get(index),tempList)){
 						//if matched then remove the index from current list
@@ -410,7 +400,7 @@ public class ExecutiveECL {
 		private void AddRecord(LinkedHashMap<String, List<String>> getvalue){
 			
 			List<LinkedHashMap<String,List<String>>> newlist = new ArrayList<LinkedHashMap<String,List<String>>>();
-			 newlist.add(getvalue);
+			 newlist.add(this.ReRangedBorrowlist(getvalue));
 			 this.borrowlist.addAll(newlist);
 			 
 		} 
@@ -601,6 +591,27 @@ public class ExecutiveECL {
 		 */
 		
 	
+
+		/**
+		 * Generate query section key
+		 * @param object
+		 * @return
+		 */
+		private String Generatekey(LinkedHashMap<String, List<String>> object){
+			String generateString = "--- query "+this.GenerateQueryString(object) + "---";
+			return generateString;
+		}	
+		
+		private String GenerateQueryString(LinkedHashMap<String, List<String>> object){
+			ECLController temp = new ECLController();
+			String wholeString = "";
+			for(Entry<String, List<String>> entry : object.entrySet()){
+			    List<String> value = entry.getValue();
+			    wholeString=entry.getKey()+" "+temp.ConvertListToString(value);
+			}
+			
+			return wholeString;
+		}
 	
 	
 	

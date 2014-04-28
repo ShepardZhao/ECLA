@@ -5,6 +5,7 @@ package ECLA;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ import static java.lang.System.*;
  * @version:v1.0
  * @date:12/04/2014
  */
-public class AnalysisECLB extends AnalysisController {
+public class AnalysisECLB extends ECLController {
 	/**
 	 * Attributes
 	 */
@@ -39,9 +40,7 @@ public class AnalysisECLB extends AnalysisController {
 		 try { 
 			 Scanner scanner;	
 			 scanner = new Scanner(this.GetFileWithName());
-			 int count =0;
-			 boolean namecondition=true;
-			 boolean birthdaycondition=true; 
+		
 			 while(scanner.hasNextLine()){
 				 String content = scanner.nextLine();
 				 //once there is not empty line
@@ -50,72 +49,69 @@ public class AnalysisECLB extends AnalysisController {
 					if(content.contains("name")){
 						
 						if(this.SingleLineConditionCheck("name", content)){
-							namecondition =false;
-						}
-						else{
-							namecondition=true;
 							linkedHashMap.put("name",this.SingleLineProcess("name",content));
-							//out.println(content);
 						}
 					
 					}
 					//if current line contained birthday field && name field has corrected format
-					else if(content.contains("birthday") && namecondition){
+					else if(content.contains("birthday")){
 						if(this.SingleLineConditionCheck("birthday", content)){
-							
-							birthdaycondition = false;
-						}
-						else{
-							birthdaycondition =true;
 							linkedHashMap.put("birthday",this.SingleLineProcess("birthday",content));
 
 						}
+						
 					}
 					//if current line contained phone field && name and birthday fields have corrected format
-					else if(content.contains("phone") && namecondition  && birthdaycondition){
-						if(!this.SingleLineConditionCheck("phone", content)){
+					else if(content.contains("phone")){
+						if(this.SingleLineConditionCheck("phone", content)){
 							linkedHashMap.put("phone",this.PhoneSingleLineProcess("phone",content));
 						}
 					}
 					//if current line contained email field && name and birthday fields have corrected format
-					else if(content.contains("email") && namecondition && birthdaycondition){
-						if(!this.SingleLineConditionCheck("email", content)){
+					else if(content.contains("email")){
+						if(this.SingleLineConditionCheck("email", content)){
 							linkedHashMap.put("email",this.SingleLineProcess("email",content));
 							}
 					}
-					//MultiLine touched
-					//if current line contained ", " || contained string like booklist && name and birthday fields have corrected format
-					else if((content.contains(", ") || content.contains("booklist")) && namecondition && birthdaycondition){
-						linkedHashMap.put("booklist",MultipleLineProcess("booklist",content,multilineborrowlist));
-						
-						
-					}
-					//if current line contained string \*t string only && contained address && name && birthday have corrected format
-					else if((this.MultipleAddressLineCheck(content) || content.contains("address")) && namecondition && birthdaycondition){
-						linkedHashMap.put("address",MultipleLineProcess("address",content,multilineAddress));
+					
+					else if((!this.MultipleLineCheck(content) || content.contains("address")) && this.MultipleLineConditionCheck(content) && !content.contains("booklist")){
+						linkedHashMap.put("address",MultipleAddressProcess("address",content,multilineAddress));
 					}
 					//MultiLine end
+					//MultiLine touched
+					//if current line contained ", " || contained string like booklist 
+					else if(this.MultipleLineCheck(content) && (content.contains("booklist") || content.contains(", ") )&& this.MultipleLineConditionCheck(content) && !content.contains("address")){
+						linkedHashMap.put("booklist",MultipleBooklistProcess("booklist",content,multilineborrowlist));	
+					}
 				 }
-				 
 				 else{
 					 if(linkedHashMap.containsKey("name") && linkedHashMap.containsKey("birthday")){
-					 tempList.add(linkedHashMap);
-	
-					 borrowsectionList.addAll(tempList);
-					 
-					 tempList = new ArrayList<LinkedHashMap<String,List<String>>>();
+						 tempList.add(this.ReRangedBorrowlist(linkedHashMap));
+		
+						 this.borrowsectionList.addAll(tempList);
+						 
+						 tempList = new ArrayList<LinkedHashMap<String,List<String>>>();
 
-					 linkedHashMap = new LinkedHashMap<String,List<String>>();
-					 
-					 multilineborrowlist = new ArrayList<String>();
-					 
-					 multilineAddress = new ArrayList<String>();
+						 linkedHashMap = new LinkedHashMap<String,List<String>>();
+						 
+						 multilineborrowlist = new ArrayList<String>();
+						 
+						 multilineAddress = new ArrayList<String>();
+						 } 
+					 else{
+						 tempList = new ArrayList<LinkedHashMap<String,List<String>>>();
+
+						 linkedHashMap = new LinkedHashMap<String,List<String>>();
+						 
+						 multilineborrowlist = new ArrayList<String>();
+						 
+						 multilineAddress = new ArrayList<String>();
 					 }
-					 
-					 }
+				 }
+				 
+				
 			 }
 			 scanner.close();
-			 //this.Analysisborrowfilelist(TempsectionMap);
 			 
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -178,6 +174,9 @@ public class AnalysisECLB extends AnalysisController {
 	 /**
 	  * end
 	  */
+	 
+	 
+	
 	 
 	 
 	 /**

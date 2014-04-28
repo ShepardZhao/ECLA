@@ -1,0 +1,65 @@
+--- query name Mary Beor---
+
+name				Mary Beor
+birthday			26-11-1972
+phone				353336907
+email				MaryBeor@spambob.com
+address				16 Yarra Street,  LAWRENCE, VIC, Australia
+
+name				Mary Beor
+birthday			15-9-1957
+phone				353336907
+email				MaryBeor@spambob.com
+address				59 Hart Street, NORTH ROTHBURY, NSW, Australia
+
+name				Jade Cumberlege
+birthday			01-01-1933
+phone				298031463
+email				JadeCumberlege@spambob.com
+address				71 Oriana Street, WARNERVALE, NSW, Australia
+booklist			Romeo and Juliet, 02-02-2003, 9780752127956
+					War and Peace, 09-02-2009, 97807583272312
+
+name				Taylah Bowe
+birthday			01-01-1933
+phone				298031463
+email				TaylahBowe@trashymail.com
+address				71 Oriana Street, WARNERVALE, NSW, Australia
+booklist			Romeo and Juliet, 02-02-2003, 9780752127956
+					War and Peace, 09-02-2009, 97807583272312
+
+--- query birthday 01-01-1933---
+
+name				Mary Beor
+birthday			26-11-1972
+phone				353336907
+email				MaryBeor@spambob.com
+address				16 Yarra Street,  LAWRENCE, VIC, Australia
+
+name				Mary Beor
+birthday			15-9-1957
+phone				353336907
+email				MaryBeor@spambob.com
+address				59 Hart Street, NORTH ROTHBURY, NSW, Australia
+
+name				Jade Cumberlege
+birthday			01-01-1933
+phone				298031463
+email				JadeCumberlege@spambob.com
+address				71 Oriana Street, WARNERVALE, NSW, Australia
+booklist			Romeo and Juliet, 02-02-2003, 9780752127956
+					War and Peace, 09-02-2009, 97807583272312
+
+name				Taylah Bowe
+birthday			01-01-1933
+phone				298031463
+email				TaylahBowe@trashymail.com
+address				71 Oriana Street, WARNERVALE, NSW, Australia
+booklist			Romeo and Juliet, 02-02-2003, 9780752127956
+					War and Peace, 09-02-2009, 97807583272312
+
+--- End of query ---
+
+
+
+
