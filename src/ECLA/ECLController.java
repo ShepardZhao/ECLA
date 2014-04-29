@@ -1,5 +1,8 @@
 /**
- * 
+ * This is the System controller. It will do something logical algorithms
+ * This is an abstract class
+ * This class is the super of Classes of AnalysisECLB, AnalysisECLI and ExecutiveECL
+ * @author Xun Zhao
  */
 package ECLA;
 
@@ -7,15 +10,11 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.*;
 
-/**
- * This is the System controller, that will do something logical algorithms
- * 
- * @author xzha4611
- *
- */
-public class ECLController {
+
+public abstract class ECLController {
+	private final String[] keywords ={"name","address","birthday","email","phone","booklist",", "};
 	private final String number_punct_Pattern = "[\\p{Digit}|\\p{Punct}]";
-	private final String birthday_Pattern = "^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-((18|19|20|21)\\d\\d)";
+	private final String date_Pattern = "^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d$";
 	private final String email_Pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private final String phone_Pattern = "[\\d+]";
 	private final String isbn_Pattern = "^[0-9]{13}$";
@@ -102,7 +101,7 @@ public class ECLController {
 	 */
 	protected boolean BirthdayFieldCheck(String birthdayString){
 		
-		if(this.PatternCheck(this.birthday_Pattern,birthdayString)){
+		if(this.PatternCheck(this.date_Pattern,birthdayString)){
 			return true;
 		}
 		else{
@@ -158,7 +157,7 @@ public class ECLController {
 	
 	protected boolean BooklistDateCheck(String getstring){
 		//in this case the birthday date has same format just like the borrowed date
-		if(this.PatternCheck(this.birthday_Pattern, getstring)){
+		if(this.PatternCheck(this.date_Pattern, getstring)){
 			return true;
 		}
 		else{
@@ -175,10 +174,9 @@ public class ECLController {
 	/**
 	 * Multiple line condition check
 	 */
-	protected boolean MultipleLineConditionCheck(String getstring){
-		String[] keywords ={"name","address","birthday","email","phone","booklist",", "};
+	protected boolean KeywordCheck(String getstring){
 		boolean condition = false;
-		for(String index : keywords){
+		for(String index : this.keywords){
 			if(getstring.contains(index)){
 				condition = true;
 			}
@@ -287,7 +285,14 @@ public class ECLController {
 		 }
 		 singleLine.close();
 
-		 return list;
+		 List<String> newlist = new ArrayList<String>();
+
+		 for(String item : list){
+			 if(!item.isEmpty()){
+				 newlist.add(item);
+			 }
+		 }
+		 return newlist;
 
 
 	 }

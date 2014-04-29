@@ -1,16 +1,12 @@
 /**
- * 
+ * This is an abstract class
+ * This is the Generator class that is super class of ECLOutput and class of ECLReport  
+ * @author zhaoxun321
  */
 package ECLA;
-
 import java.io.PrintWriter;
 import java.util.List;
-
-/**
- * @author zhaoxun321
- *
- */
-public class ECLGenerateController {
+public abstract class ECLGenerateController {
 	/**
 	 * write to single line
 	 */

@@ -1,18 +1,9 @@
-package ECLA;
-
 /**
  * The program is a Electronic Community Library (ECL) Management System
-
- * @author xzha4611
- * Starts from 12/04/2014
+ * @author Xun Zhao
  */
-
-
+package ECLA;
 import static java.lang.System.*;
-
-import java.util.*;
-
-
 public class ECL {
 
 	//attributes 

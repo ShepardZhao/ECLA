@@ -1,15 +1,11 @@
 /**
- * 
- */
-package ECLA;
-
-import java.io.FileNotFoundException;
-import java.util.*;
-/**
  * This file is reading and analyzing instruction file
- * @author zhaoxun321
+ * @author Xun Zhao
  *
  */
+package ECLA;
+import java.io.FileNotFoundException;
+import java.util.*;
 public class AnalysisECLI extends ECLController{
 	
 	/**
@@ -38,17 +34,21 @@ public class AnalysisECLI extends ECLController{
 				String content = scanner.nextLine();
 			if(!content.isEmpty()){
 				if (content.contains("add") && content.contains("name") && content.contains("birthday")){
+					if(!this.RturnTempLinkedMap("add",content).isEmpty()){
 					Instructionlist.add(this.RturnTempLinkedMap("add",content));	
+					}
 				}
 				else if(content.contains("delete") && content.contains("name") && content.contains("birthday")){
+					if(!this.RturnTempLinkedMap("delete",content).isEmpty()){
 					Instructionlist.add(this.RturnTempLinkedMap("delete",content));
+					}		
 				}
 				else if(content.contains("sort")){
 					Instructionlist.add(this.RturnTempLinkedMapSort(content));
 				}
 				else if(content.contains("query")){
-					
 					Instructionlist.add(this.RturnTempLinkedMapQuery(content));
+					
 				}
 				else if(content.contains("save")){
 					Instructionlist.add(this.RturnTempLinkedMap("save"));
@@ -64,9 +64,7 @@ public class AnalysisECLI extends ECLController{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
 	
 	/**
@@ -79,8 +77,9 @@ public class AnalysisECLI extends ECLController{
 	private LinkedHashMap<String,LinkedHashMap<String,List<String>>> RturnTempLinkedMap(String type,String value){
 		
 		LinkedHashMap<String,LinkedHashMap<String,List<String>>> temp = new LinkedHashMap<String,LinkedHashMap<String,List<String>>>();
-		
-		temp.put(type, this.FieldLinkedHashMap(type,value));
+		if(!this.FieldLinkedHashMap(type,value).isEmpty()){
+			temp.put(type, this.FieldLinkedHashMap(type,value));
+		}
 		
 		return temp;
 	}
@@ -147,16 +146,36 @@ public class AnalysisECLI extends ECLController{
 		//if current query is format two
 		if(getstring.contains("name") && getstring.contains("birthday") && QueryForamtTwoCheck(getstring)){
 			queryLinkedHashMap.put("query_formatTwo", this.ReturnQuery_format_twoString(getstring));
+			
 		}
 		//if current query format is not validated by two then one would be
-		else{
+		else if(this.ComplexQueryforFormatTwo(getstring)){
 			queryLinkedHashMap.put("query_formatOne", this.FieldLinkedHashMap("query", getstring));
-
+			
 		}
 		
+		
+		
 		return queryLinkedHashMap;
+
+		
 	}
 	
+	
+	//check the complex condition
+	private boolean ComplexQueryforFormatTwo(String getstring){
+		boolean condition =true;
+		Scanner setscanner = new Scanner(getstring);
+		setscanner.useDelimiter("; ");
+		while(setscanner.hasNext()){
+			String value = setscanner.next();
+			if(!this.KeywordCheck(value)){
+				condition = false;
+			}
+		}
+		setscanner.close();
+		return condition;
+	}
 	
 	private boolean QueryForamtTwoCheck(String getstring){
 		Scanner splitdate = new Scanner(getstring);
@@ -237,7 +256,6 @@ public class AnalysisECLI extends ECLController{
 			else if(getstring.contains("name")){//check name
 				if(this.NameFieldCheck(getstring.replaceAll("^name\\s",""))){
 					linkedHashMap.put("name",this.SingleLineProcess("name", getstring));
-
 				}	
 			}
 			else if(getstring.contains("email")){//check email
@@ -247,7 +265,7 @@ public class AnalysisECLI extends ECLController{
 			}
 			else if(getstring.contains("phone")){//check phone
 				if(this.PhoneFieldCheck(getstring.replaceAll("^phone\\s",""))){
-					linkedHashMap.put("phone", this.SingleLineProcess("phone", getstring));
+					linkedHashMap.put("phone", this.PhoneSingleLineProcess("phone", getstring));
 				}	
 			}
 			else if(getstring.contains("address")){//check address
@@ -259,6 +277,20 @@ public class AnalysisECLI extends ECLController{
 			
 		}
 		ioscanner.close();
+		
+		//condition for delete field check
+		if(type.equals("delete") || type.equals("add")){
+			if(linkedHashMap.containsKey("name") && linkedHashMap.containsKey("birthday")){
+				return linkedHashMap;
+
+			}
+			else{
+				linkedHashMap.clear();
+			}
+		}
+		else{
+			return linkedHashMap;
+		}
 		
 		return linkedHashMap;
 		
@@ -293,8 +325,6 @@ public class AnalysisECLI extends ECLController{
 	private List<String> DeeperBookListCheck(String modifiedbooklist){
 		List<String> booklist = new ArrayList<String>();
 		Scanner deepercheck = new Scanner(modifiedbooklist.replaceAll("^\\s+", ""));
-		boolean isbn=false;
-		boolean date=false;
 		deepercheck.useDelimiter(", ");
 		while(deepercheck.hasNext()){				
 			String getcontent = deepercheck.next();

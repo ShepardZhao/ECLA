@@ -1,3 +1,7 @@
+/**
+ * This file is generating the report file only
+ * @author Xun zhao
+ */
 package ECLA;
 import java.io.*;
 import java.util.LinkedHashMap;
@@ -29,11 +33,13 @@ public class ECLReport extends ECLGenerateController{
 	/**
 	 * Write to report file
 	 */
-		public void WriteToReportFile(LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>> object){
-				try {
+		public void WriteToReportFile(List<LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>>> object){
+		if	(!object.isEmpty()){
+			try {
 					PrintWriter writer;
 					writer = new PrintWriter(new BufferedWriter(new FileWriter(this.report,true)));
-					for (Entry<String, List<LinkedHashMap<String, List<String>>>> entryroot : object.entrySet()){
+				  for(int i=0;i<object.size();i++){	
+					for (Entry<String, List<LinkedHashMap<String, List<String>>>> entryroot : object.get(i).entrySet()){
 						writer.println(entryroot.getKey());
 
 					  for (int index=0;index<entryroot.getValue().size();index++){
@@ -68,14 +74,14 @@ public class ECLReport extends ECLGenerateController{
 								writer.print(getkey);
 								this.WriteToMultiple(getkey,getlist,writer);
 							}
-						
+						}
 						
 						}
 					  }
 						writer.println();
-						
+						writer.println(this.GenerateFooter()+"\n\n\n\n");
+
 					}
-					writer.println(this.GenerateFooter()+"\n\n\n\n");
 					writer.close();
 					
 								
@@ -83,7 +89,7 @@ public class ECLReport extends ECLGenerateController{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+		}
 			}
 		
 	/**

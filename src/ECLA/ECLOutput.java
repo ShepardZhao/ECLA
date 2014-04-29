@@ -1,5 +1,6 @@
 /**
- * 
+ * This class is generating the output file only
+ * @author Xun Zhao
  */
 package ECLA;
 
@@ -9,10 +10,6 @@ import java.util.Map.Entry;
 
 import static java.lang.System.*;
 
-/**
- * @author zhaoxun321
- *
- */
 public class ECLOutput extends ECLGenerateController{
 	/**
 	 * Attributes

@@ -1,21 +1,13 @@
 /**
- * 
- */
-package ECLA;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.lang.System.*;
-/**
  * @This class is doing the file analysis
- * @author:xzh4611
+ * @author:Xun Zhao
  * @version:v1.0
  * @date:12/04/2014
  */
+package ECLA;
+import java.io.FileNotFoundException;
+import java.util.*;
+import static java.lang.System.*;
 public class AnalysisECLB extends ECLController {
 	/**
 	 * Attributes
@@ -74,13 +66,13 @@ public class AnalysisECLB extends ECLController {
 							}
 					}
 					
-					else if((!this.MultipleLineCheck(content) || content.contains("address")) && this.MultipleLineConditionCheck(content) && !content.contains("booklist")){
+					else if((!this.MultipleLineCheck(content) || content.contains("address")) && this.KeywordCheck(content) && !content.contains("booklist")){
 						linkedHashMap.put("address",MultipleAddressProcess("address",content,multilineAddress));
 					}
 					//MultiLine end
 					//MultiLine touched
 					//if current line contained ", " || contained string like booklist 
-					else if(this.MultipleLineCheck(content) && (content.contains("booklist") || content.contains(", ") )&& this.MultipleLineConditionCheck(content) && !content.contains("address")){
+					else if(this.MultipleLineCheck(content) && (content.contains("booklist") || content.contains(", ") )&& this.KeywordCheck(content) && !content.contains("address")){
 						linkedHashMap.put("booklist",MultipleBooklistProcess("booklist",content,multilineborrowlist));	
 					}
 				 }
