@@ -74,11 +74,11 @@ public class ExecutiveECL extends ECLController {
 		    }
 		    else if(key.equals("query_formatOne")){
 		    	//put these query into a list, if these query values contain one or more results		    	
-		    	this.query.add((this.Query_formatOneProcess(this.Generatekey(value),value)));
+		    	this.query.add((this.Query_formatOneProcess(this.eclr.Generatekey(value),value)));
 		    }
 		    else if(key.equals("query_formatTwo")){
 		    	//doing the query format two function 
-		    	this.query.add((this.query_formatTwoProcess(this.Generatekey(value),value)));
+		    	this.query.add((this.query_formatTwoProcess(this.eclr.Generatekey(value),value)));
 
 		    }
 		    else if(key.equals("save")){
@@ -636,30 +636,7 @@ public class ExecutiveECL extends ECLController {
 		
 	
 
-		/**
-		 * Generate query section key
-		 * @param object
-		 * @return
-		 */
-		private String Generatekey(LinkedHashMap<String, List<String>> object){
-			String generateString = "--- query"+this.GenerateQueryString(object) + " ---";
-			String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
-			return finaltitle;
-		}	
 		
-		private String GenerateQueryString(LinkedHashMap<String, List<String>> object){
-			String wholeString = "";
-			for(Entry<String, List<String>> entry : object.entrySet()){
-			    List<String> value = entry.getValue();
-			    wholeString+="; "+entry.getKey()+" "+ value;
-			}
-			
-			return wholeString;
-		}
-	
-		/**
-		 * end
-		 */
 		
 	
 	

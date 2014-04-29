@@ -97,17 +97,6 @@ public class ECLReport extends ECLGenerateController{
 	 */
 	
 
-	/**
-	 * Generate footer	
-	 * @return
-	 */
-	private String GenerateFooter(){
-		
-		return "--- End of query ---";
-	}	
-		
-	/**
-	 * end	
-	 */
+	
 	
 }
