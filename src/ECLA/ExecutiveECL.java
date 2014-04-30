@@ -74,11 +74,11 @@ public class ExecutiveECL extends ECLController {
 		    }
 		    else if(key.equals("query_formatOne")){
 		    	//put these query into a list, if these query values contain one or more results		    	
-		    	this.query.add((this.Query_formatOneProcess(this.eclr.Generatekey(value),value)));
+		    	this.query.add((this.Query_formatOneProcess(this.eclr.GenerateQueryHeaderKey(value),value)));
 		    }
 		    else if(key.equals("query_formatTwo")){
 		    	//doing the query format two function 
-		    	this.query.add((this.query_formatTwoProcess(this.eclr.Generatekey(value),value)));
+		    	this.query.add((this.query_formatTwoProcess(this.eclr.GenerateQueryHeaderKey(value),value)));
 
 		    }
 		    else if(key.equals("save")){

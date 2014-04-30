@@ -79,7 +79,7 @@ public class ECLReport extends ECLGenerateController{
 						}
 					  }
 						writer.println();
-						writer.println(this.GenerateFooter()+"\n\n\n\n");
+						writer.println(this.GenerateQueryFooter()+"\n\n\n\n");
 
 					}
 					writer.close();

@@ -69,21 +69,19 @@ public abstract class ECLGenerateController {
 	 * @param object
 	 * @return
 	 */
-	protected String Generatekey(LinkedHashMap<String, List<String>> object){
-		String generateString = "--- query"+this.GenerateQueryString(object) + " ---";
-		String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
-		return finaltitle;
-	}	
-	
-	private String GenerateQueryString(LinkedHashMap<String, List<String>> object){
+	protected String GenerateQueryHeaderKey(LinkedHashMap<String, List<String>> object){
 		String wholeString = "";
 		for(Entry<String, List<String>> entry : object.entrySet()){
 		    List<String> value = entry.getValue();
 		    wholeString+="; "+entry.getKey()+" "+ value;
 		}
 		
-		return wholeString;
-	}
+		String generateString = "--- query"+ wholeString + " ---";
+		String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
+		return finaltitle;
+	}	
+	
+
 
 	/**
 	 * end
@@ -95,7 +93,7 @@ public abstract class ECLGenerateController {
 	 * Generate footer	
 	 * @return
 	 */
-	protected String GenerateFooter(){
+	protected String GenerateQueryFooter(){
 		
 		return "--- End of query ---";
 	}	
