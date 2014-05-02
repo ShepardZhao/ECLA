@@ -96,7 +96,6 @@ public class ECLReport extends ECLGenerateController{
 	 * end
 	 */
 	
-
-	
+		
 	
 }

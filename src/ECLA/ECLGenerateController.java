@@ -40,7 +40,7 @@ public abstract class ECLGenerateController {
 		if(getkey.equals("address")){
 			writer.print("\t\t\t\t");
 			for(String item:getvaluelist){
-				writer.print(item);
+				writer.print(item+" ");
 			}
 			writer.println();
 		}

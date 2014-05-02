@@ -7,6 +7,7 @@
 package ECLA;
 import java.io.FileNotFoundException;
 import java.util.*;
+
 import static java.lang.System.*;
 public class AnalysisECLB extends ECLController {
 	/**
@@ -34,21 +35,26 @@ public class AnalysisECLB extends ECLController {
 			 scanner = new Scanner(this.GetFileWithName());
 		
 			 while(scanner.hasNextLine()){
-				 String content = scanner.nextLine();
+				 String oldcontent = scanner.nextLine();
+				 String content = this.FilterSpaceTabToOneSpace(oldcontent);
+
 				 //once there is not empty line
 				 if(!content.isEmpty()){ 	
 					 //if current line contained name field
 					if(content.contains("name")){
 						
 						if(this.SingleLineConditionCheck("name", content)){
-							linkedHashMap.put("name",this.SingleLineProcess("name",content));
+							String  getnamevalue= this.FilterKeywordAndRestSpaceOrTab("name",content);
+							linkedHashMap.put("name",this.ReturnNameList(getnamevalue));
 						}
 					
 					}
 					//if current line contained birthday field && name field has corrected format
 					else if(content.contains("birthday")){
+
 						if(this.SingleLineConditionCheck("birthday", content)){
-							linkedHashMap.put("birthday",this.SingleLineProcess("birthday",content));
+							String  getbirthdayvalue= this.FilterKeywordAndRestSpaceOrTab("birthday",content);
+							linkedHashMap.put("birthday",this.SingleLineProcess(getbirthdayvalue));
 
 						}
 						
@@ -56,13 +62,15 @@ public class AnalysisECLB extends ECLController {
 					//if current line contained phone field && name and birthday fields have corrected format
 					else if(content.contains("phone")){
 						if(this.SingleLineConditionCheck("phone", content)){
-							linkedHashMap.put("phone",this.PhoneSingleLineProcess("phone",content));
+							String  getphonevalue= this.FilterKeywordAndRestSpaceOrTab("phone",content);
+							linkedHashMap.put("phone",this.PhoneSingleLineProcess(getphonevalue));
 						}
 					}
 					//if current line contained email field && name and birthday fields have corrected format
 					else if(content.contains("email")){
 						if(this.SingleLineConditionCheck("email", content)){
-							linkedHashMap.put("email",this.SingleLineProcess("email",content));
+							String  getphonevalue= this.FilterKeywordAndRestSpaceOrTab("email",content);
+							linkedHashMap.put("email",this.SingleLineProcess(getphonevalue));
 							}
 					}
 					

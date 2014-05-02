@@ -1,11 +1,13 @@
-query name Mary Beor
-add name Mary Beor; address 59 Hart Street, NORTH ROTHBURY, NSW, Australia; birthday 15-9-1957
-add name Bob    Grady;birthday 15-10-1927;booklist 			War and Peace 02-02-1993   9780758327956,  23-11-2012 9783596501847 Catch-22 
-query name Mary Beor
-query birthday 01-01-1933
-add birthday 01-01-1933; email TaylahBowe@trashymail.com; name Taylah Bowe
-query birthday 01-01-1933
-query name Jade Cumberlege; birthday	01-01-1933
-query name Jade Cumberlege; birthday	1-1-1933; 6-8-1954; 2-7-1955
-query name Jade Cumberlege; birthday 01-01-1933; 06-01-2003; 02-07-2004
+add name Stella Bartlett; birthday 34-7-1947; phone 0394482037; email StellaBartlett@trashymail.com; address 1 Horsington Street, SURREY HILLS, VIC, Australia
+add name Stella Bartlett; birthday 14-07-1947; phone 0394482037; email StellaBartlett@trashymail.com; address 1 Horsington Street, SURREY HILLS, VIC, Australia
+
+delete name Mary Beor; birthday 26-11-1972;
+delete name Mitchell Camidge birthday    03-03-1935
+add name Connor Dunrossil; birthday 08-04-1961; email ConnorDunrossil@spambob.com; booklist	281407133195 Jane Eyre (Paperback) 01-03-2014, 9781407132321 The Republic 05-05-2014
+
+
+
+
+delete name Stella Bartlett
+delete name Harry Hensman; birthday 6-17-1946
 save

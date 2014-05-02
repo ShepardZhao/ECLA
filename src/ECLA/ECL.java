@@ -58,9 +58,6 @@ public class ECL {
 		else{
 			return true;
 		}
-		
-		
-		
 	}
 	
 	//main function

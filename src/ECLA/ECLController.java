@@ -242,16 +242,13 @@ public abstract class ECLController {
 	 
 	 
 	 //phone process
-	protected List<String> PhoneSingleLineProcess(String keyname, String string){
+	protected List<String> PhoneSingleLineProcess(String string){
 		 List<String> list = new ArrayList<String>();
 		 Scanner singleLine = new Scanner (string);
-		 singleLine.useDelimiter(keyname);
 		 while(singleLine.hasNext()){
 			 String getstring = singleLine.next();
-			 if(!getstring.equals(string)){
-				 
 				 list.add(this.phoneString(getstring));
-			 }
+			 
 		 }
 		 singleLine.close();
 
@@ -273,14 +270,13 @@ public abstract class ECLController {
 	 
 	 
 	 //Single line process
-	 protected List<String> SingleLineProcess(String keyname,String string){
+	 protected List<String> SingleLineProcess(String string){
 		 List<String> list = new ArrayList<String>();
 		 Scanner singleLine = new Scanner (string);
-		 singleLine.useDelimiter(keyname);
 		 while(singleLine.hasNext()){
 			 String getstring = singleLine.next();
 				 
-				 list.add(this.FilterTab(getstring).replaceAll("\\s+", " "));
+				 list.add(getstring);
 			 
 		 }
 		 singleLine.close();
@@ -292,9 +288,8 @@ public abstract class ECLController {
 				 newlist.add(item);
 			 }
 		 }
+		 		 
 		 return newlist;
-
-
 	 }
 	 
 	 
@@ -400,7 +395,58 @@ public abstract class ECLController {
 	  * end
 	  */
 	 
-
+	 
+	 /**
+	  * name re-build
+	  */
+	 
+	 protected List<String> ReturnNameList(String namelist){
+		 List<String> newlist = new ArrayList<String>();
+		 newlist.add(this.FilterSpaceTabToOneSpaceInBeginning(namelist));
+		 return newlist;
+		 
+		 
+	 }	
+	 
+	 
+	 /**
+	  * end
+	  */
+	 
+	 
+	 
+	 /**
+	  * Filter \t+ or \s+ in beginning
+	  */
+	 
+	 protected String FilterSpaceTabToOneSpaceInBeginning(String getstring){
+		 return getstring.replaceAll("^\\t+|^\\s+", "");
+	 }
+	 
+	 
+	 /**
+	  * end
+	  */
+	 
+	 /**
+	  * Filter \t+ or \s+ 
+	  * making all m-space or m-tab to be one space
+	  */
+	 protected String FilterSpaceTabToOneSpace(String getstring){
+		 return getstring.replaceAll("\\t+|\\s+", " ");
+	 }
+	 
+	 /**
+	  * end
+	  */
+	 
+	 /**
+	  * Filter keyword and rest tabs or spaces off
+	  */
+	 protected String FilterKeywordAndRestSpaceOrTab(String keyword, String string){
+		 return string.replaceAll("^"+keyword+"\\t+|"+keyword+"\\s+", "");
+	 }
+	 
 	
 	
 }

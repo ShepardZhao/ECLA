@@ -6,6 +6,7 @@
 package ECLA;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Pattern;
 public class AnalysisECLI extends ECLController{
 	
 	/**
@@ -32,25 +33,29 @@ public class AnalysisECLI extends ECLController{
 			Scanner scanner = new Scanner(this.GetFileWithName());
 			while(scanner.hasNextLine()){
 				String content = scanner.nextLine();
-			if(!content.isEmpty()){
-				if (content.contains("add") && content.contains("name") && content.contains("birthday")){
-					if(!this.RturnTempLinkedMap("add",content).isEmpty()){
-					Instructionlist.add(this.RturnTempLinkedMap("add",content));	
+				//convert all m-space or m-tab to one space
+				String newcontent = this.FilterSpaceTabToOneSpace(content);
+
+			if(!newcontent.isEmpty()){
+				if (newcontent.contains("add") && newcontent.contains("name") && newcontent.contains("birthday")){
+					if(!this.RturnTempLinkedMap("add",newcontent).isEmpty()){
+					Instructionlist.add(this.RturnTempLinkedMap("add",newcontent));	
 					}
 				}
-				else if(content.contains("delete") && content.contains("name") && content.contains("birthday")){
-					if(!this.RturnTempLinkedMap("delete",content).isEmpty()){
-					Instructionlist.add(this.RturnTempLinkedMap("delete",content));
+				else if(newcontent.contains("delete") && newcontent.contains("name") && newcontent.contains("birthday")){
+					if(!this.RturnTempLinkedMap("delete",newcontent).isEmpty()){
+					Instructionlist.add(this.RturnTempLinkedMap("delete",newcontent));
 					}		
 				}
-				else if(content.contains("sort")){
-					Instructionlist.add(this.RturnTempLinkedMapSort(content));
+				else if(newcontent.contains("sort")){
+					Instructionlist.add(this.RturnTempLinkedMapSort(newcontent));
 				}
-				else if(content.contains("query")){
-					Instructionlist.add(this.RturnTempLinkedMapQuery(content));
-					
+				else if(newcontent.contains("query")){
+					if(!this.RturnTempLinkedMapQuery(newcontent).isEmpty()){
+					Instructionlist.add(this.RturnTempLinkedMapQuery(newcontent));
+					}
 				}
-				else if(content.contains("save")){
+				else if(newcontent.contains("save")){
 					Instructionlist.add(this.RturnTempLinkedMap("save"));
 
 				}
@@ -206,14 +211,14 @@ public class AnalysisECLI extends ECLController{
 		//rid of "query"
 		String newquerystring = string.replaceAll("^query\\s", "");
 		Scanner queryscanner  = new Scanner(newquerystring);
-		queryscanner.useDelimiter("; ");
+		queryscanner.useDelimiter(";");
 		while(queryscanner.hasNext()){
-			String getstring = queryscanner.next();
+			String getstring = queryscanner.next().replaceAll("^\\s+|^\\t", "");
 			if(getstring.contains("name")){
-				name.add(getstring.replaceAll("^name\\s", ""));
+				name.add(getstring.replaceAll("^name\\s+|\\t+", ""));
 			}
 			else if(getstring.contains("birthday")){
-				birthday.add(getstring.replaceAll("^birthday\\s", ""));
+				birthday.add(getstring.replaceAll("^birthday\\s+|\\t+", ""));
 			}
 			else{
 				date.add(getstring);
@@ -242,34 +247,41 @@ public class AnalysisECLI extends ECLController{
 	 */
 	private LinkedHashMap<String,List<String>> FieldLinkedHashMap(String type,String content){
 		LinkedHashMap<String,List<String>> linkedHashMap = new LinkedHashMap<String,List<String>>();
-		String newstring = content.replaceAll("^"+type+"\\s", "");
-		
+		String newstring = content.replaceAll(type+"\\s", "");
 		Scanner ioscanner = new Scanner(newstring);
-		ioscanner.useDelimiter("; ");
+		ioscanner.useDelimiter(";");
 		while(ioscanner.hasNext()){
-			String getstring = ioscanner.next();
+			String primStirng = ioscanner.next();
+			String  getstring= this.FilterSpaceTabToOneSpaceInBeginning(primStirng);
+			
 			if(getstring.contains("birthday")){//check birthday 
-				if(this.BirthdayFieldCheck(getstring.replaceAll("^birthday\\s",""))){
-					linkedHashMap.put("birthday", this.SingleLineProcess("birthday", getstring));
+				String birthdayvalue = this.FilterKeywordAndRestSpaceOrTab("birthday",getstring);
+
+				if(this.BirthdayFieldCheck(birthdayvalue)){
+					linkedHashMap.put("birthday", this.SingleLineProcess(birthdayvalue));
 				}
 			}
 			else if(getstring.contains("name")){//check name
-				if(this.NameFieldCheck(getstring.replaceAll("^name\\s",""))){
-					linkedHashMap.put("name",this.SingleLineProcess("name", getstring));
+				String namevalue = this.FilterKeywordAndRestSpaceOrTab("name",getstring);
+				if(this.NameFieldCheck(namevalue)){
+					linkedHashMap.put("name",this.ReturnNameList(namevalue));
 				}	
 			}
 			else if(getstring.contains("email")){//check email
-				if(this.MailFieldCheck(getstring.replaceAll("^email\\s",""))){
-					linkedHashMap.put("email", this.SingleLineProcess("email", getstring));
+				String emailvalue = this.FilterKeywordAndRestSpaceOrTab("email",getstring);
+				if(this.MailFieldCheck(emailvalue)){
+					linkedHashMap.put("email", this.SingleLineProcess( emailvalue));
 				}	
 			}
 			else if(getstring.contains("phone")){//check phone
-				if(this.PhoneFieldCheck(getstring.replaceAll("^phone\\s",""))){
-					linkedHashMap.put("phone", this.PhoneSingleLineProcess("phone", getstring));
+				String phonevalue = this.FilterKeywordAndRestSpaceOrTab("phone",getstring);
+				if(this.PhoneFieldCheck(phonevalue)){
+					linkedHashMap.put("phone", this.PhoneSingleLineProcess(phonevalue));
 				}	
 			}
 			else if(getstring.contains("address")){//check address
-					linkedHashMap.put("address", this.SingleLineProcess("address", getstring));
+				String phonevalue = this.FilterKeywordAndRestSpaceOrTab("address",getstring);
+					linkedHashMap.put("address", this.SingleLineProcess(phonevalue));
 			}
 			else if(getstring.contains("booklist")){//check booklist
 				linkedHashMap.put("booklist", this.DeepBooklistCheck(getstring));			

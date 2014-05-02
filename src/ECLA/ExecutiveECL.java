@@ -265,9 +265,8 @@ public class ExecutiveECL extends ECLController {
 			
 		}
 		
-		/**
-		 * return exist field
-		 */
+		
+		//return exist field 
 		private List<LinkedHashMap<String,List<String>>> ReturnExistField(String key){
 			List<LinkedHashMap<String,List<String>>> temp = new ArrayList<LinkedHashMap<String,List<String>>>();
 			for(int index=0; index<this.borrowlist.size();index++){
