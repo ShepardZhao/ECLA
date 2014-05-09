@@ -1,0 +1,31 @@
+name 				Connor Dunrossil
+birthday			08-04-1961
+phone				0261960475
+email				ConnorDunrossil@spambob.com
+address				24 Lewin Street, KUBURA, 
+					NSW, Australia
+
+address				16 Yarra Street, LAWRENCE, VIC, Australia
+name 				Mary Beor
+   booklist		
+email				MaryBeor@spambob.com
+phone				0353336907
+birthday			26-11-1972
+
+name				Jade Cumberlege
+email				JadeCumberlege@spambob.com
+phone				0298031463
+birthday			01-01-1933
+booklist War and Peace, 02-02-1993, 9780758327956 
+			23-11-2012, 9783596501847, Catch-22 
+ 9781407133195, Mockingjay, 01-03-2014 			
+address				71 Oriana Street, WARNERVALE, NSW, Australia
+
+phone 				0749123670
+	address 			77 Hay Point Road, 
+					SLADE POINT, 
+					QLD, Australia
+birthday 			03-03-1935
+name 				Mitchell Camidge
+email 				MitchellCamidge@spambob.com
+
