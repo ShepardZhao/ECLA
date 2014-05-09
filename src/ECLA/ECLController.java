@@ -7,6 +7,8 @@
 package ECLA;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.*;
 
@@ -100,14 +102,24 @@ public abstract class ECLController {
 	 * Birthday field check 
 	 */
 	protected boolean BirthdayFieldCheck(String birthdayString){
-		
-		if(this.PatternCheck(this.date_Pattern,birthdayString)){
+		String getstring = this.CovertDateToExactly(this.FilterSpaceTabToEmpty(birthdayString));
+		if(this.PatternCheck(this.date_Pattern,getstring)){
 			return true;
 		}
 		else{
 			return false;
 		}	
+		
+		
 	}
+	
+	//convert date form 3-09-1999 to 03-09-1999
+	protected String CovertDateToExactly(String date){
+		if (date.charAt(1) == '-') date = "0" + date;
+		if (date.charAt(4) == '-') date = date.substring(0,3) + "0" + date.substring(3);
+		return date;
+	}
+	
 	
 	/**
 	 * end
@@ -268,6 +280,8 @@ public abstract class ECLController {
 		
 	}
 	 
+	
+	
 	 
 	 //Single line process
 	 protected List<String> SingleLineProcess(String string){
@@ -302,13 +316,25 @@ public abstract class ECLController {
 			 		scanner.useDelimiter(type);
 			 		while(scanner.hasNext()){
 			 			String getstring = scanner.next();
-			 
-			 				multiline.add(this.FilterTab(getstring).replaceAll("^\\s+|\\s+|\\t+", " "));
+			 			String tempaddress = this.FilterSpaceTabToOneSpace(getstring);
+			 			String address =  this.FilterSpaceTabToOneSpaceInBeginning(tempaddress);
+			 			String finalladdress= address.replaceAll(",\\s+|,\\t+",", ");
+			 			
+			 			if(!finalladdress.isEmpty()){
+				 			multiline.add(finalladdress);
+
+			 			}	
 			 			
 			 		}
 		 			scanner.close();
 			 	}else{
-	 				multiline.add(this.FilterTab(string).replaceAll("\\s+", " "));
+			 		
+		 			String temp = this.FilterSpaceTabToOneSpace(string);
+		 			String tempaddress = this.FilterSpaceTabToOneSpaceInBeginning(temp);
+		 			String finaltemp = tempaddress.replaceAll(",\\s+|,\\t+", ", ");
+
+	 				multiline.add(finaltemp);
+		 			
 			 	}
 	 	
 
@@ -413,7 +439,17 @@ public abstract class ECLController {
 	  * end
 	  */
 	 
+	 /**
+	  * Filter \t+ or \s+ in anyplace
+	  */
 	 
+	 protected String FilterSpaceTabToEmpty(String getstring){
+		 return getstring.replaceAll("\\t+|\\s+", "");
+	 }
+	 
+	 /**
+	  * end
+	  */
 	 
 	 /**
 	  * Filter \t+ or \s+ in beginning

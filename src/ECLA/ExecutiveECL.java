@@ -228,10 +228,11 @@ public class ExecutiveECL extends ECLController {
 	
 	/******************************************** Algorithm **********************************************/
 	
-		/**
-		 * Sort Algorithm without Java its API
-		 */
 		
+		/**
+		 *  Sort Algorithm without Java its API
+		 * @param sort_type
+		 */
 		private void sort(String sort_type){
 			//sort existed items
 			List<LinkedHashMap<String,List<String>>> temp = new ArrayList<LinkedHashMap<String,List<String>>>();
@@ -514,7 +515,7 @@ public class ExecutiveECL extends ECLController {
 				while(booklistscanner.hasNext()){
 					String getvalue = booklistscanner.next();
 					if(this.BooklistDateCheck(getvalue)){
-						if(ValidateDate(getvalue,begindate,endsdate)){
+						if(ValidateDateScope(getvalue,begindate,endsdate)){
 							newbooklist.add(borrowlistvalue.get("booklist").get(index));
 						}
 					}
@@ -536,7 +537,7 @@ public class ExecutiveECL extends ECLController {
 		
 		
 		//check date scope
-		private boolean ValidateDate(String booklistdate, String begindate, String endsdate){
+		private boolean ValidateDateScope(String booklistdate, String begindate, String endsdate){
 			SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
 			boolean condition =false;
 			

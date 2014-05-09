@@ -53,7 +53,7 @@ public class AnalysisECLB extends ECLController {
 					else if(content.contains("birthday")){
 
 						if(this.SingleLineConditionCheck("birthday", content)){
-							String  getbirthdayvalue= this.FilterKeywordAndRestSpaceOrTab("birthday",content);
+							String  getbirthdayvalue= this.CovertDateToExactly(this.FilterKeywordAndRestSpaceOrTab("birthday",content));
 							linkedHashMap.put("birthday",this.SingleLineProcess(getbirthdayvalue));
 
 						}

@@ -5,9 +5,8 @@
  */
 package ECLA;
 import java.io.PrintWriter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
+
+import java.util.*;
 public abstract class ECLGenerateController {
 	/**
 	 * write to single line
@@ -40,7 +39,7 @@ public abstract class ECLGenerateController {
 		if(getkey.equals("address")){
 			writer.print("\t\t\t\t");
 			for(String item:getvaluelist){
-				writer.print(item+" ");
+				writer.print(item);
 			}
 			writer.println();
 		}
@@ -64,43 +63,7 @@ public abstract class ECLGenerateController {
 	
 	
 	
-	/**
-	 * Generate query section key
-	 * @param object
-	 * @return
-	 */
-	protected String GenerateQueryHeaderKey(LinkedHashMap<String, List<String>> object){
-		String wholeString = "";
-		for(Entry<String, List<String>> entry : object.entrySet()){
-		    List<String> value = entry.getValue();
-		    wholeString+="; "+entry.getKey()+" "+ value;
-		}
-		
-		String generateString = "--- query"+ wholeString + " ---";
-		String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
-		return finaltitle;
-	}	
 	
-
-
-	/**
-	 * end
-	 */
-	
-	
-	
-	/**
-	 * Generate footer	
-	 * @return
-	 */
-	protected String GenerateQueryFooter(){
-		
-		return "--- End of query ---";
-	}	
-		
-	/**
-	 * end	
-	 */
 	
 	
 	

@@ -38,6 +38,7 @@ public class ECLReport extends ECLGenerateController{
 			try {
 					PrintWriter writer;
 					writer = new PrintWriter(new BufferedWriter(new FileWriter(this.report,true)));
+					int size = object.size();
 				  for(int i=0;i<object.size();i++){	
 					for (Entry<String, List<LinkedHashMap<String, List<String>>>> entryroot : object.get(i).entrySet()){
 						writer.println(entryroot.getKey());
@@ -78,9 +79,12 @@ public class ECLReport extends ECLGenerateController{
 						
 						}
 					  }
+					
 						writer.println();
-						writer.println(this.GenerateQueryFooter()+"\n\n\n\n");
-
+						writer.println(this.GenerateQueryFooter());
+						if(i+1<size){
+							writer.println("\n\n\n");
+						}
 					}
 					writer.close();
 					
@@ -96,6 +100,43 @@ public class ECLReport extends ECLGenerateController{
 	 * end
 	 */
 	
+		/**
+		 * Generate query section key
+		 * @param object
+		 * @return
+		 */
+		protected String GenerateQueryHeaderKey(LinkedHashMap<String, List<String>> object){
+			String wholeString = "";
+			for(Entry<String, List<String>> entry : object.entrySet()){
+			    List<String> value = entry.getValue();
+			    wholeString+="; "+entry.getKey()+" "+ value;
+			}
+			
+			String generateString = "--- query"+ wholeString + " ---";
+			String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
+			return finaltitle;
+		}	
+		
+
+
+		/**
+		 * end
+		 */
+		
+		
+		
+		/**
+		 * Generate footer	
+		 * @return
+		 */
+		protected String GenerateQueryFooter(){
+			
+			return "--- End of query ---";
+		}	
+			
+		/**
+		 * end	
+		 */
 		
 	
 }

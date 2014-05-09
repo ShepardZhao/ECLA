@@ -5,10 +5,11 @@
 package ECLA;
 
 import java.io.*;
+
 import java.util.*;
 import java.util.Map.Entry;
 
-import static java.lang.System.*;
+
 
 public class ECLOutput extends ECLGenerateController{
 	/**
@@ -37,6 +38,7 @@ public class ECLOutput extends ECLGenerateController{
 	 * Generate output file
 	 */
 	public void  GenerateOutputFile(List<LinkedHashMap<String,List<String>>> modifiedborrowlist){
+		int size=modifiedborrowlist.size();
 		try {
 			PrintWriter writer = new PrintWriter(this.outputfile,"UTF-8");
 			for (int index=0;index<modifiedborrowlist.size();index++){
@@ -70,21 +72,18 @@ public class ECLOutput extends ECLGenerateController{
 						this.WriteToMultiple(getkey,getlist,writer);
 					}
 				
-				
 				}
+				//check the seize scope if the size is less thant
+				if(index+1<size){
 				writer.println();
+				}
 				
 			}
 			writer.close();
-			
-			
-			
-			
+		
 		} catch (FileNotFoundException e) {
-			out.println(e.getMessage());
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

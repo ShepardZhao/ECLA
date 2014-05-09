@@ -6,7 +6,7 @@
 package ECLA;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Pattern;
+
 public class AnalysisECLI extends ECLController{
 	
 	/**
@@ -247,6 +247,8 @@ public class AnalysisECLI extends ECLController{
 	 */
 	private LinkedHashMap<String,List<String>> FieldLinkedHashMap(String type,String content){
 		LinkedHashMap<String,List<String>> linkedHashMap = new LinkedHashMap<String,List<String>>();
+		List<String> multilineAddress = new ArrayList<String>();
+
 		String newstring = content.replaceAll(type+"\\s", "");
 		Scanner ioscanner = new Scanner(newstring);
 		ioscanner.useDelimiter(";");
@@ -258,7 +260,7 @@ public class AnalysisECLI extends ECLController{
 				String birthdayvalue = this.FilterKeywordAndRestSpaceOrTab("birthday",getstring);
 
 				if(this.BirthdayFieldCheck(birthdayvalue)){
-					linkedHashMap.put("birthday", this.SingleLineProcess(birthdayvalue));
+					linkedHashMap.put("birthday", this.SingleLineProcess(this.CovertDateToExactly(birthdayvalue)));
 				}
 			}
 			else if(getstring.contains("name")){//check name
@@ -280,11 +282,10 @@ public class AnalysisECLI extends ECLController{
 				}	
 			}
 			else if(getstring.contains("address")){//check address
-				String phonevalue = this.FilterKeywordAndRestSpaceOrTab("address",getstring);
-					linkedHashMap.put("address", this.SingleLineProcess(phonevalue));
+					linkedHashMap.put("address", this.MultipleAddressProcess("address",getstring,multilineAddress));
 			}
 			else if(getstring.contains("booklist")){//check booklist
-				linkedHashMap.put("booklist", this.DeepBooklistCheck(getstring));			
+					linkedHashMap.put("booklist", this.DeepBooklistCheck(getstring));			
 			}			
 			
 		}
@@ -298,6 +299,7 @@ public class AnalysisECLI extends ECLController{
 			}
 			else{
 				linkedHashMap.clear();
+				multilineAddress.clear();
 			}
 		}
 		else{
