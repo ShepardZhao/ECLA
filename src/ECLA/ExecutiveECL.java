@@ -77,8 +77,10 @@ public class ExecutiveECL extends ECLController {
 		    	this.query.add((this.Query_formatOneProcess(this.eclr.GenerateQueryHeaderKey(value),value)));
 		    }
 		    else if(key.equals("query_formatTwo")){
-		    	//doing the query format two function 
+		    	//doing the query format two function
+                if((this.query_formatTwoProcess(this.eclr.GenerateQueryHeaderKey(value),value))!=null){
 		    	this.query.add((this.query_formatTwoProcess(this.eclr.GenerateQueryHeaderKey(value),value)));
+                }
 
 		    }
 		    else if(key.equals("save")){
@@ -182,16 +184,23 @@ public class ExecutiveECL extends ECLController {
 	 */
 	
 	private LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>> query_formatTwoProcess(String key,LinkedHashMap<String, List<String>> getvalue){
-		LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>> tempquery_format_two = new LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>>();
+
+        LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>> tempquery_format_two = new LinkedHashMap<String,List<LinkedHashMap<String,List<String>>>>();
 		try{
-			tempquery_format_two.put(key,this.SaveQueryFormatTwo(getvalue));
+            if(!this.SaveQueryFormatTwo(getvalue).isEmpty()) {
+                tempquery_format_two.put(key, this.SaveQueryFormatTwo(getvalue));
+            }
 			}
 			catch(Exception e){
 				e.getMessage();
 			}
 		
-		
-		return tempquery_format_two;
+		if(tempquery_format_two.isEmpty()){
+            return null;
+        }
+        else{
+            return tempquery_format_two;
+        }
 	}
 	
 	
@@ -482,7 +491,7 @@ public class ExecutiveECL extends ECLController {
 		private List<LinkedHashMap<String, List<String>>> SaveQueryFormatTwo(LinkedHashMap<String, List<String>> value){
 			List<LinkedHashMap<String, List<String>>> templinkedhashmap = new ArrayList<LinkedHashMap<String, List<String>>>(); 
 			for(int index=0;index<this.borrowlist.size();index++){
-				if(this.QueryCompareFormatTwo(value,this.borrowlist.get(index))){
+				if(this.QueryCompareFormatTwo(value,this.borrowlist.get(index)) && this.ReturnNewRecordWithinBooklist(value.get("date"), this.borrowlist.get(index))!=null){
 					templinkedhashmap.add(this.ReturnNewRecordWithinBooklist(value.get("date"), this.borrowlist.get(index)));
 				}		
 			}
@@ -503,12 +512,13 @@ public class ExecutiveECL extends ECLController {
 		
 		//return new record that matched borrow date; ie. 02-03-2003 to 10-03-2003
 		private LinkedHashMap<String,List<String>> ReturnNewRecordWithinBooklist(List<String> bookdate,  LinkedHashMap<String,List<String>> borrowlistvalue){
-			List<String> newbooklist = new ArrayList<String>();	
+			List<String> newbooklist = new ArrayList<String>();
 			LinkedHashMap<String,List<String>> templinkedHashMap = new LinkedHashMap<String,List<String>>();
 			templinkedHashMap.putAll(borrowlistvalue);
-			
+
 			String begindate = bookdate.get(0);
 			String endsdate = bookdate.get(1);
+
 			for(int index=0;index<borrowlistvalue.get("booklist").size();index++){
 				Scanner booklistscanner = new Scanner(borrowlistvalue.get("booklist").get(index));
 				booklistscanner.useDelimiter(", ");
@@ -519,20 +529,23 @@ public class ExecutiveECL extends ECLController {
 							newbooklist.add(borrowlistvalue.get("booklist").get(index));
 						}
 					}
-					
+
 				}
 				booklistscanner.close();
-				
+
 			}
-			
+
 			if(!newbooklist.isEmpty()){
 				templinkedHashMap.remove("booklist");
 				templinkedHashMap.put("booklist",newbooklist);
-			}
-			
-			
-			return templinkedHashMap;
-			
+                return templinkedHashMap;
+
+            }
+
+            else{
+                return null;
+            }
+
 		}
 		
 		
@@ -633,11 +646,10 @@ public class ExecutiveECL extends ECLController {
 		/**
 		 * end
 		 */
-		
-	
 
-		
-		
+
+
+
 	
 	
 	

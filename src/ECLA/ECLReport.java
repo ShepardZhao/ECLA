@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.*;
 public class ECLReport extends ECLGenerateController{
 	/**
 	 * Attribute
@@ -111,20 +112,21 @@ public class ECLReport extends ECLGenerateController{
 			    List<String> value = entry.getValue();
 			    wholeString+="; "+entry.getKey()+" "+ value;
 			}
-			
+
 			String generateString = "--- query"+ wholeString + " ---";
 			String finaltitle = generateString.replaceAll("--- query; ","--- query ").replaceAll("\\[|\\]", "").replace(", ", "; ");
-			return finaltitle;
-		}	
-		
+
+            return finaltitle;
+		}
+
 
 
 		/**
 		 * end
 		 */
-		
-		
-		
+
+
+
 		/**
 		 * Generate footer	
 		 * @return

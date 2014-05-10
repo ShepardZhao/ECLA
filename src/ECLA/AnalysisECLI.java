@@ -149,9 +149,8 @@ public class AnalysisECLI extends ECLController{
 	private LinkedHashMap<String,LinkedHashMap<String,List<String>>> RturnTempLinkedMapQuery(String getstring){
 		LinkedHashMap<String,LinkedHashMap<String,List<String>>> queryLinkedHashMap = new LinkedHashMap<String,LinkedHashMap<String,List<String>>>();
 		//if current query is format two
-		if(getstring.contains("name") && getstring.contains("birthday") && QueryForamtTwoCheck(getstring)){
+		if(getstring.contains("name") && getstring.contains("birthday") && QueryForamtTwoCheck(getstring) && this.ReturnQuery_format_twoString(getstring)!=null){
 			queryLinkedHashMap.put("query_formatTwo", this.ReturnQuery_format_twoString(getstring));
-			
 		}
 		//if current query format is not validated by two then one would be
 		else if(this.ComplexQueryforFormatTwo(getstring)){
@@ -218,22 +217,31 @@ public class AnalysisECLI extends ECLController{
 				name.add(getstring.replaceAll("^name\\s+|\\t+", ""));
 			}
 			else if(getstring.contains("birthday")){
-				birthday.add(getstring.replaceAll("^birthday\\s+|\\t+", ""));
+                String Stringdate = getstring.replaceAll("^birthday\\s+|\\t+", "");
+                if(this.BirthdayFieldCheck(Stringdate)){
+                    birthday.add(this.CovertDateToExactly(Stringdate));
+                }
 			}
 			else{
-				date.add(getstring);
+                 if(this.BirthdayFieldCheck(getstring)){
+                     date.add(this.CovertDateToExactly(getstring));
+                 }
 			}
 			
 			
 		}
 		queryscanner.close();
-		format_two.put("name", name);
-		format_two.put("birthday", birthday);
-		format_two.put("date", date);
-		
-	
-		return format_two;
-		
+
+        if(name.isEmpty() || birthday.isEmpty() || date.isEmpty()){
+            return null;
+        }
+        else{
+            format_two.put("name", name);
+            format_two.put("birthday", birthday);
+            format_two.put("date", date);
+            return format_two;
+        }
+
 	}
 	
 	

@@ -16,7 +16,7 @@ import java.util.regex.*;
 public abstract class ECLController {
 	private final String[] keywords ={"name","address","birthday","email","phone","booklist",", "};
 	private final String number_punct_Pattern = "[\\p{Digit}|\\p{Punct}]";
-	private final String date_Pattern = "^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d$";
+	private final String date_Pattern = "^(0?[1-9]|[12][0-9]|3[01])[- /.](0?[1-9]|1[012])[- /.](19|20)\\d\\d$";
 	private final String email_Pattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private final String phone_Pattern = "[\\d+]";
 	private final String isbn_Pattern = "^[0-9]{13}$";
@@ -115,9 +115,11 @@ public abstract class ECLController {
 	
 	//convert date form 3-09-1999 to 03-09-1999
 	protected String CovertDateToExactly(String date){
-		if (date.charAt(1) == '-') date = "0" + date;
-		if (date.charAt(4) == '-') date = date.substring(0,3) + "0" + date.substring(3);
-		return date;
+            if (date.charAt(1) == '-') date = "0" + date;
+            if (date.charAt(4) == '-') date = date.substring(0, 3) + "0" + date.substring(3);
+            return date;
+
+
 	}
 	
 	
@@ -168,13 +170,16 @@ public abstract class ECLController {
 	}
 	
 	protected boolean BooklistDateCheck(String getstring){
-		//in this case the birthday date has same format just like the borrowed date
-		if(this.PatternCheck(this.date_Pattern, getstring)){
-			return true;
-		}
-		else{
-			return false;
-		}
+		//in this case the borrowed date has same format just like the birthday date
+            //if the date is the format d-mm-yyyy or dd-m-yyyy then we think that is right
+            if(this.PatternCheck(this.date_Pattern, getstring)){
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
 	}
 	
 	
@@ -234,20 +239,20 @@ public abstract class ECLController {
 	 protected boolean MultipleLineCheck(String string){
 		 
 		 boolean condition =false;
-		 Scanner addressScanner =new Scanner(string);
-		 addressScanner.useDelimiter(", ");
-		 while(addressScanner.hasNext()){
-			 String  getnewString = this.FilterTab(addressScanner.next());
-			 
+		 Scanner Scanner =new Scanner(string);
+         Scanner.useDelimiter(", ");
+		 while(Scanner.hasNext()){
+			 String  getnewString = this.FilterTab(Scanner.next());
+
 			 if(this.BooklistISBNCheck(getnewString) || this.BooklistDateCheck(getnewString)){
 				 condition =true;
 			 }
+
 			
 		 }
-			 
-		 addressScanner.close();
-		
-		 return condition;
+
+         Scanner.close();
+         return condition;
 		 
 	 }
 	 
@@ -351,23 +356,57 @@ public abstract class ECLController {
 		 		scanner.useDelimiter(type);
 		 		while(scanner.hasNext()){
 		 			String getstring = scanner.next();
-		 				multiline.add(this.FilterTab(getstring));
+
+		 				multiline.add(this.ConvertBoolListDate(this.FilterTab(getstring)));
 		 			
 		 		}
 	 			scanner.close();
 		 	}else{
- 				multiline.add(this.FilterTab(string));
+
+ 				multiline.add(this.ConvertBoolListDate(this.FilterTab(string)));
 		 	}
  	
 
 	 return multiline;
 
  }
-	 
+
+
 	 /**
 	  * end
 	  */
-	 
+
+
+    /**
+     * replace date such as from d-m-yyyy to dd-mm-yyyy
+     */
+
+    private String ConvertBoolListDate(String string){
+       Scanner scanner = new Scanner(string);
+        String date = null;
+        scanner.useDelimiter(", ");
+        while (scanner.hasNext()){
+            String getStirng = scanner.next();
+            if(this.BooklistDateCheck(getStirng)){
+                date = getStirng;
+            }
+
+        }
+    if(date!=null) {
+        return string.replaceAll(date, this.CovertDateToExactly(date));
+    }
+    else{
+        return string;
+    }
+
+    }
+
+    /**
+     * end
+     */
+
+
+
 
 	 /**
 	  * Re-ranged borrowlist
